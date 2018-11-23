@@ -26,12 +26,10 @@ if($this->products){
 	foreach($this->products as $product){
 		if($product->quantity>0){
 			echo '<h4>'.vmText::sprintf('COM_VIRTUEMART_CART_PRODUCT_ADDED',$product->product_name,$product->quantity).'</h4>';
-		} else {
-			if(!empty($product->errorMsg)){
-				echo '<div>'.$product->errorMsg.'</div>';
-			}
 		}
-
+        if(!empty($product->errorMsg)){
+            echo '<div>'.$product->errorMsg.'</div>';
+        }
 	}
 }
 

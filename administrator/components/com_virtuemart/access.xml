@@ -60,6 +60,7 @@
 	<section name="component">
 		<action name="vm.user" title="COM_VM_USER_MANAGE" description="COM_VM_USER_MANAGE_TIP" />
 		<action name="vm.user.edit" title="COM_VM_USER_EDIT" description="COM_VM_USER_EDIT_TIP" />
+		<action name="vm.user.delete" title="COM_VM_USER_DELETE" description="COM_VM_USER_DELETE_TIP" />
 		<action name="vm.user.editshop" title="COM_VM_USER_EDITSHOP" description="COM_VM_USER_EDITSHOP_TIP" />
 		<action name="vm.shoppergroup" title="COM_VM_SHOPPERGROUP_MANAGE" description="COM_VM_SHOPPERGROUP_MANAGE_TIP" />
 		<action name="vm.shoppergroup.edit" title="COM_VM_SHOPPERGROUP_EDIT" description="COM_VM_SHOPPERGROUP_EDIT_TIP" />

@@ -30,20 +30,7 @@ defined('_JEXEC') or die();
  *
  */
 
-if(JVM_VERSION<3){
-	if(!interface_exists('JObservableInterface')){
-		interface JObservableInterface{
 
-		}
-	}
-
-	if(!interface_exists('JTableInterface')){
-		interface JTableInterface{
-
-		}
-	}
-}
-if(!class_exists('vObject')) require(VMPATH_ADMIN .'/helpers/vobject.php');
 
 class VmTable extends vObject implements JObservableInterface, JTableInterface {
 
@@ -79,6 +66,7 @@ class VmTable extends vObject implements JObservableInterface, JTableInterface {
 	public $_loadedWithLangFallback = 0;
 	public $_loaded = false;
 	protected $_updateNulls = false;
+	protected $_toConvertDec = false;
 
 	/**
 	 * @param string $table
@@ -196,7 +184,7 @@ class VmTable extends vObject implements JObservableInterface, JTableInterface {
 			}
 			if (!class_exists($tableClass))
 			{
-				vmdebug('Did not find file '.$type.'.php in ',$paths,$tryThis);
+				vmdebug('Did not find class '.$tableClass.' in file '.$type.'.php in ',$paths,$tryThis);
 				return false;
 			}
 		}
@@ -317,9 +305,9 @@ class VmTable extends vObject implements JObservableInterface, JTableInterface {
 		return $this->_pkey;
 	}
 
-	public function setObligatoryKeys($key) {
+	public function setObligatoryKeys($key, $error = 1) {
 
-		$this->_obkeys[$key] = 1;
+		$this->_obkeys[$key] = $error;
 	}
 
 	public function setUniqueName($name) {
@@ -435,6 +423,26 @@ class VmTable extends vObject implements JObservableInterface, JTableInterface {
 
 	public function emptyCache(){
 		self::$_cache = array();
+	}
+
+	/**
+	 * @param $toConvert array
+	 */
+	public function setConvertDecimal($toConvert) {
+		$this->_toConvertDec = $toConvert;
+	}
+
+	public function convertDec(){
+
+		if($this->_toConvertDec){
+			foreach($this->_toConvertDec as $f){
+				if(!empty($this->$f)){
+					$this->$f = str_replace(array(',',' '),array('.',''),$this->$f);
+				} else if(isset($this->$f)){
+					$this->$f = 0.0;
+				}
+			}
+		}
 	}
 
 	/**
@@ -649,9 +657,6 @@ class VmTable extends vObject implements JObservableInterface, JTableInterface {
 			unset($fieldNames[$this->_pkey]);
 		}
 		$this->_cryptedFields = $fieldNames;
-		if(!class_exists('vmCrypt')){
-			require(VMPATH_ADMIN .'/helpers/vmcrypt.php');
-		}
 	}
 
 	/**
@@ -1014,7 +1019,8 @@ class VmTable extends vObject implements JObservableInterface, JTableInterface {
 		if (!empty($this->_varsToPushParam)) {
 			$hashVarsToPush = vmJsApi::safe_json_encode($this->_varsToPushParam);
 		}
-		$this->_lhash = md5($oid. $select . $k . $mainTable . $andWhere . $hashVarsToPush);
+
+		$this->_lhash = $this->getHash($oid. $select . $k . $mainTable . $andWhere . $hashVarsToPush);
 		//$this->showFullColumns();
 		if (isset (self::$_cache['l'][$this->_lhash])) {
 			$this->bind(self::$_cache['l'][$this->_lhash]);
@@ -1071,6 +1077,7 @@ class VmTable extends vObject implements JObservableInterface, JTableInterface {
 
 			if($this->_translatable and VmConfig::$langCount>1 and $this->_ltmp!=VmConfig::$jDefLang ){
 
+				//$usedLangTag = $this->_langTag;
 				if(VmConfig::$defaultLang!=VmConfig::$jDefLang){
 					if($this->_langTag != VmConfig::$defaultLang ){
 						$this->_ltmp = $this->_langTag;
@@ -1078,17 +1085,20 @@ class VmTable extends vObject implements JObservableInterface, JTableInterface {
 					} else {
 						$this->_langTag = VmConfig::$jDefLang;
 					}
-
 				} else {
 					$this->_ltmp = $this->_langTag;
 					$this->_langTag = VmConfig::$defaultLang;
 				}
 
-				//vmdebug('No result for '.$this->_ltmp.', lets check for Fallback lang '.$this->_langTag);
+
+				//vmdebug('No result for '.$usedLangTag.' '.$this->_pkey.' '.$this->_slugAutoName.', lets check for Fallback lang '.$this->_langTag);
+				
+
 				//vmSetStartTime('lfallback');
 				$this->_loadedWithLangFallback = VmConfig::$defaultLangTag;
 				$this->load($oid, $overWriteLoadName, $andWhere, $tableJoins, $joinKey) ;
 				//vmTime('Time to load language fallback '.$this->_langTag, 'lfallback');
+				return $this;
 			} else {
 				$this->_loaded = false;
 			}
@@ -1097,7 +1107,6 @@ class VmTable extends vObject implements JObservableInterface, JTableInterface {
 		if($this->_ltmp){
 			//vmdebug('Set Ltmp '.$this->_ltmp.' back to false');
 			$this->_langTag = $this->_ltmp;
-
 			self::$_cache['l'][$this->_lhash] = $this->loadFieldValues(false);
 		}
 		else {
@@ -1110,8 +1119,16 @@ class VmTable extends vObject implements JObservableInterface, JTableInterface {
 		}
 		//if($this->_translatable) vmTime('loaded '.$this->_langTag.' '.$mainTable.' '.$oid ,'vmtableload');
 		$this->_ltmp = false;
+
 		return $this;
 	}
+
+
+	function getHash($value) {
+		$hashFunction = Vmconfig::get('hashFunction', 'md5');
+		return call_user_func_array($hashFunction, array(&$value));
+	}
+
 
 	function getLoaded (){
 		return $this->_loaded;
@@ -1126,9 +1143,7 @@ class VmTable extends vObject implements JObservableInterface, JTableInterface {
 	}
 
 	function decryptFields(){
-		if(!class_exists('vmCrypt')){
-			require(VMPATH_ADMIN .'/helpers/vmcrypt.php');
-		}
+
 		if(isset($this->modified_on) and $this->modified_on!='0000-00-00 00:00:00'){
 			$date = JFactory::getDate($this->modified_on);
 			$date = $date->toUnix();
@@ -1538,7 +1553,7 @@ class VmTable extends vObject implements JObservableInterface, JTableInterface {
 			//$transliterate = $config->get('unicodeslugs');
 			$unicodeslugs = VmConfig::get('transliterateSlugs',false);
 			if($unicodeslugs){
-				$lang = JFactory::getLanguage();
+				$lang = vmLanguage::getLanguage();
 				$this->$slugName = $lang->transliterate($this->$slugName);
 			}
 
@@ -1596,6 +1611,8 @@ class VmTable extends vObject implements JObservableInterface, JTableInterface {
 			}
 		}
 
+		$this->convertDec();
+
 		if(!empty($this->_hashName)){
 			$this->hashEntry();
 		}
@@ -1615,7 +1632,7 @@ class VmTable extends vObject implements JObservableInterface, JTableInterface {
 		$tblKey = $this->_tbl_key;
 		$ok = true;
 		if ($this->_translatable) {
-			if (!class_exists('VmTableData')) require(VMPATH_ADMIN .'/helpers/vmtabledata.php');
+
 			$db = JFactory::getDBO();
 			$dataTable = clone($this);
 			$langTable = new VmTableData($this->_tbl_lang, $tblKey, $db);
@@ -2245,7 +2262,7 @@ class VmTable extends vObject implements JObservableInterface, JTableInterface {
 
 			$langs = VmConfig::get('active_languages', array(VmConfig::$jDefLangTag));
 			if (!$langs) $langs[] = VmConfig::$vmlang;
-			if (!class_exists('VmTableData')) require(VMPATH_ADMIN .'/helpers/vmtabledata.php');
+
 			foreach ($langs as $lang) {
 				$lang = strtolower(strtr($lang, '-', '_'));
 				$langError = $this->checkAndDelete($this->_tbl . '_' . $lang);

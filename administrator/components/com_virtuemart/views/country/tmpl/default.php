@@ -13,7 +13,7 @@
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
-* @version $Id: default.php 9413 2017-01-04 17:20:58Z Milbo $
+* @version $Id: default.php 9851 2018-05-30 07:41:14Z Milbo $
 */
 
 // Check to ensure this file is included in Joomla!
@@ -85,7 +85,7 @@ $states = vmText::_('COM_VIRTUEMART_STATE_S');
 			$country_string= vmText::_($prefix.$row->country_3_code); ?>
 		    <a href="<?php echo $editlink; ?>"><?php echo $row->country_name ?> </a>&nbsp;
 			<?php
-			$lang =JFactory::getLanguage();
+			$lang =vmLanguage::getLanguage();
 			if ($lang->hasKey($prefix.$row->country_3_code)) {
 				echo "(".$country_string.") ";
 			}

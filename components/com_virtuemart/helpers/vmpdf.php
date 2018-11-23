@@ -20,12 +20,9 @@ defined('_JEXEC') or die('');
  * http://virtuemart.net
  */
 
-defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 if (!class_exists( 'VmConfig' )) require(JPATH_ROOT .'/administrator/components/com_virtuemart/helpers/config.php');
 VmConfig::loadConfig();
-if(!class_exists('VmModel')) require(VMPATH_ADMIN.DS.'helpers'.DS.'vmmodel.php');
-
-if(!class_exists('VmImage')) require(VMPATH_ADMIN.DS.'helpers'.DS.'image.php');
+vmDefines::tcpdf();
 
 class VmPdf {
 
@@ -40,9 +37,8 @@ class VmPdf {
 			// TODO: use some default view???
 			return;
 		}
-
+		
 		if(!class_exists('VmVendorPDF')){
-			vmError('vmPdf: For the pdf, you must install the tcpdf library at '.VMPATH_LIBS.DS.'tcpdf');
 			return 0;
 		}
 
@@ -72,11 +68,10 @@ class VmPdf {
 }
 
 
-if(!file_exists(VMPATH_LIBS.DS.'tcpdf'.DS.'tcpdf.php')){
-	vmError('VmPDF helper: For the PDF invoice and other PDF business letters, you must install the tcpdf library at '.VMPATH_LIBS.DS.'tcpdf');
-} else {
 
-	if(!class_exists('TCPDF'))require(VMPATH_LIBS.DS.'tcpdf'.DS.'tcpdf.php');
+
+if(class_exists('TCPDF')){
+
 	// Extend the TCPDF class to create custom Header and Footer as configured in the Backend
 	class VmVendorPDF extends TCPDF {
 		var $vendor = 0;
@@ -117,10 +112,7 @@ if(!file_exists(VMPATH_LIBS.DS.'tcpdf'.DS.'tcpdf.php')){
 				}
 			}
 			// Generate PDF header
-			if (!class_exists ('JFile')) {
-				require(VMPATH_LIBS . DS . 'joomla' . DS . 'filesystem' . DS . 'file.php');
-			}
-			$this->tcpdf6 = JFile::exists(VMPATH_LIBS.DS.'tcpdf'.DS.'include'.DS.'tcpdf_colors.php');
+			$this->tcpdf6 = JFile::exists(VMPATH_TCPDF .'/include/tcpdf_colors.php');
 			if($this->tcpdf6){
 				$this->tcpdf6 = method_exists('TCPDF','getAllSpotColors');
 			}
@@ -214,10 +206,7 @@ if(!file_exists(VMPATH_LIBS.DS.'tcpdf'.DS.'tcpdf.php')){
 				$currentCHRF = $this->getCellHeightRatio();
 				$this->setCellHeightRatio($this->vendor->vendor_letter_footer_cell_height_ratio);
 
-				if (!class_exists ('JFile')) {
-					require(VMPATH_LIBS . DS . 'joomla' . DS . 'filesystem' . DS . 'file.php');
-				}
-				$this->tcpdf6 = JFile::exists(VMPATH_LIBS.DS.'tcpdf'.DS.'include'.DS.'tcpdf_colors.php');
+				$this->tcpdf6 = JFile::exists(VMPATH_TCPDF .'/include/tcpdf_colors.php');
 				if($this->tcpdf6){
 					$this->tcpdf6 = method_exists('TCPDF','getAllSpotColors');
 				}
@@ -262,7 +251,7 @@ if(!file_exists(VMPATH_LIBS.DS.'tcpdf'.DS.'tcpdf.php')){
 			$headertxt .= '<div id="vmdoc-header" class="vmdoc-header">' . $this->replace_variables($headerdata['string']) . '</div>';
 			$currentCHRF = $this->getCellHeightRatio();
 			$this->setCellHeightRatio($this->vendor->vendor_letter_header_cell_height_ratio);
-			$this->tcpdf6 = JFile::exists(VMPATH_LIBS.DS.'tcpdf'.DS.'include'.DS.'tcpdf_images.php');
+			$this->tcpdf6 = JFile::exists(VMPATH_TCPDF .'/include/tcpdf_images.php');
 
 			if ($this->rtl) {
 				$this->x = $this->w - $this->original_rMargin;
@@ -271,14 +260,11 @@ if(!file_exists(VMPATH_LIBS.DS.'tcpdf'.DS.'tcpdf.php')){
 			}
 			$header_x = (($this->getRTL())?($this->original_rMargin):($this->original_lMargin));
 			$cw = $this->w - $this->original_lMargin - $this->original_rMargin;
-			if (($headerdata['logo']) AND ($headerdata['logo'] != K_BLANK_IMAGE)) {
+			if (($headerdata['logo']) and ($headerdata['logo'] != K_BLANK_IMAGE)) {
 
-				if (!class_exists ('JFile')) {
-					require(VMPATH_LIBS . DS . 'joomla' . DS . 'filesystem' . DS . 'file.php');
-				}
 				if($this->tcpdf6){
 					if (!class_exists ('TCPDF_IMAGES')) {
-						require(VMPATH_LIBS.DS.'tcpdf'.DS.'include'.DS.'tcpdf_images.php');
+						require(VMPATH_TCPDF .'/include/tcpdf_images.php');
 					}
 
 					$imgtype = TCPDF_IMAGES::getImageFileType(VMPATH_ROOT.DS.$headerdata['logo']);
@@ -286,7 +272,7 @@ if(!file_exists(VMPATH_LIBS.DS.'tcpdf'.DS.'tcpdf.php')){
 					$imgtype = $this->getImageFileType(VMPATH_ROOT.DS.$headerdata['logo']);
 				}
 
-				if (($imgtype == 'eps') OR ($imgtype == 'ai')) {
+				if (($imgtype == 'eps') or ($imgtype == 'ai')) {
 					$this->ImageEps(VMPATH_ROOT.DS.$headerdata['logo'], '', '', $headerdata['logo_width']);
 				} elseif ($imgtype == 'svg') {
 					$this->ImageSVG(VMPATH_ROOT.DS.$headerdata['logo'], '', '', $headerdata['logo_width']);
@@ -330,7 +316,7 @@ if(!file_exists(VMPATH_LIBS.DS.'tcpdf'.DS.'tcpdf.php')){
 		// print header template
 		$x = 0;
 		$dx = 0;
-		if (!$this->header_xobj_autoreset AND $this->booklet AND (($this->page % 2) == 0)) {
+		if (!$this->header_xobj_autoreset AND $this->booklet and (($this->page % 2) == 0)) {
 			// adjust margins for booklet mode
 			$dx = ($this->original_lMargin - $this->original_rMargin);
 		}

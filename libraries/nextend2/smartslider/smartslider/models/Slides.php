@@ -211,7 +211,7 @@ class N2SmartsliderSlidesModel extends N2Model {
                     'diagonal2'  => '&#8600;'
                 ),
                 'relatedFields' => array(
-                    'backgroundColorEnd'
+                    'slidebackgroundColorEnd'
                 )
             ));
 
@@ -219,38 +219,37 @@ class N2SmartsliderSlidesModel extends N2Model {
                 'alpha' => true
             ));
 
-            $backgroundModeOptions = array(
-                'default' => array(
-                    'image' => '$ss$/admin/images/fillmode/default.png',
-                    'label' => n2_('Slider\'s default')
-                ),
-                'fill'    => array(
-                    'image' => '$ss$/admin/images/fillmode/fill.png',
-                    'label' => n2_('Fill')
-                ),
-                'blurfit' => array(
-                    'image' => '$ss$/admin/images/fillmode/fit.png',
-                    'label' => n2_('Blur fit')
-                ),
-                'fit'     => array(
-                    'image' => '$ss$/admin/images/fillmode/fit.png',
-                    'label' => n2_('Fit')
-                ),
-                'stretch' => array(
-                    'image' => '$ss$/admin/images/fillmode/stretch.png',
-                    'label' => n2_('Stretch')
-                ),
-                'center'  => array(
-                    'image' => '$ss$/admin/images/fillmode/center.png',
-                    'label' => n2_('Center')
-                ),
-                'tile'    => array(
-                    'image' => '$ss$/admin/images/fillmode/tile.png',
-                    'label' => n2_('Tile')
-                )
-            );
             new N2ElementImageListLabel($slideBackground, 'backgroundMode', n2_('Fill mode'), 'default', array(
-                'options'  => $backgroundModeOptions,
+                'options'  => array(
+                    'default' => array(
+                        'image' => '$ss$/admin/images/fillmode/default.png',
+                        'label' => n2_('Slider\'s default')
+                    ),
+                    'fill'    => array(
+                        'image' => '$ss$/admin/images/fillmode/fill.png',
+                        'label' => n2_('Fill')
+                    ),
+                    'blurfit' => array(
+                        'image' => '$ss$/admin/images/fillmode/fit.png',
+                        'label' => n2_('Blur fit')
+                    ),
+                    'fit'     => array(
+                        'image' => '$ss$/admin/images/fillmode/fit.png',
+                        'label' => n2_('Fit')
+                    ),
+                    'stretch' => array(
+                        'image' => '$ss$/admin/images/fillmode/stretch.png',
+                        'label' => n2_('Stretch')
+                    ),
+                    'center'  => array(
+                        'image' => '$ss$/admin/images/fillmode/center.png',
+                        'label' => n2_('Center')
+                    ),
+                    'tile'    => array(
+                        'image' => '$ss$/admin/images/fillmode/tile.png',
+                        'label' => n2_('Tile')
+                    )
+                ),
                 'rowClass' => 'n2-ss-slide-background-image-param n2-ss-background-video-param'
             ));
 
@@ -283,14 +282,21 @@ class N2SmartsliderSlidesModel extends N2Model {
             )
         ));
 
-        $link = new N2ElementMixed($settings, 'link', n2_('Link'), '|*|_self');
-        new N2ElementUrl($link, 'link-1', n2_('Link'));
-        new N2ElementList($link, 'link-2', n2_('Target window'), '', array(
-            'options' => array(
-                '_self'  => n2_('Self'),
-                '_blank' => n2_('New')
-            )
-        ));
+        $linkV1 = $form->getIfEmpty('link', '');
+        if (!empty($linkV1)) {
+            list($link, $target) = array_pad((array)N2Parse::parse($linkV1), 2, '');
+            $form->un_set('link');
+            $form->set('href', $link);
+            $form->set('href-target', $target);
+        }
+
+        if (!$this->slider->isStaticEdited || (!isset($data['static-slide']) || $data['static-slide'] != 1)) {
+            $link = new N2ElementGroup($settings, 'link', n2_('Link'));
+            new N2ElementUrl($link, 'href', n2_('Link'), '', array(
+                'style' => 'width:236px;'
+            ));
+            new N2ElementLinkTarget($link, 'href-target', n2_('Target window'));
+        }
 
         new N2ElementHidden($settings, 'slide', n2_('Slide'), 'W10=', array(
             'rowClass' => 'n2-hidden'
@@ -861,7 +867,7 @@ class N2SmartsliderSlidesModel extends N2Model {
             ), N2Html::link(n2_('Edit'), $editUrl, array('class' => 'n2-button n2-button-normal n2-button-s n2-button-green n2-radius-s n2-uc n2-h5'))),
             'placeholderContent' => N2Html::tag('div', array(
                     'class' => 'n2-box-placeholder-title n2-h4'
-                ), N2Html::link($slide->getTitle(true) . ($slide->hasGenerator() ? ' [' . $slide->getSlideStat() . ']' : ''), $editUrl, array('class' => 'n2-h4'))) . N2Html::tag('div', array(
+                ), N2Html::link(n2_esc_html($slide->getTitle(true)) . ($slide->hasGenerator() ? ' [' . $slide->getSlideStat() . ']' : ''), $editUrl, array('class' => 'n2-h4'))) . N2Html::tag('div', array(
                     'class' => 'n2-box-placeholder-buttons'
                 ), N2Html::tag('i', array('class' => 'n2-slide-first n2-i n2-it n2-i-star'), '') . N2Html::tag('a', array(
                         'class'      => 'n2-slide-published',

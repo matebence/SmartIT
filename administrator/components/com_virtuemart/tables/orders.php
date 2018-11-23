@@ -13,13 +13,11 @@
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
-* @version $Id: orders.php 9754 2018-02-01 10:40:16Z Milbo $
+* @version $Id: orders.php 9831 2018-05-07 13:45:33Z Milbo $
 */
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-
-if(!class_exists('VmTableData'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmtabledata.php');
 
 /**
  * Orders table class
@@ -96,6 +94,7 @@ class TableOrders extends VmTableData {
 	/** @var char Order language */
 	var $order_language = NULL;
 	var $delivery_date = NULL;
+	var $STsameAsBT = 0;
 	var $o_hash = NULL;
 
 	/**
@@ -118,12 +117,10 @@ class TableOrders extends VmTableData {
 	function check(){
 
 		if(empty($this->order_number)){
-			if(!class_exists('VirtueMartModelOrders')) VmModel::getModel('orders');
 			$this->order_number = VirtueMartModelOrders::genStdOrderNumber($this->virtuemart_vendor_id);
 		}
 
 		if(empty($this->order_pass)){
-			if(!class_exists('VirtueMartModelOrders')) VmModel::getModel('orders');
 			$this->order_pass = VirtueMartModelOrders::genStdOrderPass();
 		}
 

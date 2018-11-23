@@ -85,7 +85,7 @@ foreach($this->orderDetails['calc_rules'] as $rule){
 
 <?php
 $menuItemID = shopFunctionsF::getMenuItemId($this->orderDetails['details']['BT']->order_language);
-if(!class_exists('VirtueMartModelCustomfields'))require(VMPATH_ADMIN.DS.'models'.DS.'customfields.php');
+
 VirtueMartModelCustomfields::$useAbsUrls = ($this->isMail or $this->isPdf);
 foreach($this->orderDetails['items'] as $item) {
 	$qtt = $item->product_quantity ;

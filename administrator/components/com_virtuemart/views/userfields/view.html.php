@@ -13,14 +13,11 @@
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
-* @version $Id: view.html.php 9463 2017-03-06 10:45:33Z Milbo $
+* @version $Id: view.html.php 9869 2018-06-13 09:03:47Z Milbo $
 */
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-
-// Load the view framework
-if(!class_exists('VmViewAdmin'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmin.php');
 
 /**
  * HTML View class for maintaining the list of order types
@@ -37,9 +34,6 @@ class VirtuemartViewUserfields extends VmViewAdmin {
 		$option = vRequest::getCmd( 'option');
 		$mainframe = JFactory::getApplication() ;
 
-		if (!class_exists('VmHTML'))
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'html.php');
-
 		$layoutName = vRequest::getCmd('layout', 'default');
 		$model = VmModel::getModel();
 
@@ -53,11 +47,8 @@ class VirtuemartViewUserfields extends VmViewAdmin {
 			$this->userField = $model->getUserfield();
 			//vmdebug('user plugin $this->userField',$this->userField);
             $this->SetViewTitle('USERFIELD',$this->userField->name );
-            $this->assignRef('viewName',$viewName);
-			$userFieldPlugin = '';
 
-			if (!class_exists('ShopFunctions'))
-				require(VMPATH_ADMIN . DS . 'helpers' . DS . 'shopfunctions.php');
+			$userFieldPlugin = '';
 
 			$this->ordering = ShopFunctions::renderOrderingList('userfields','name',$this->userField->ordering);
 
@@ -123,7 +114,7 @@ class VirtuemartViewUserfields extends VmViewAdmin {
 				$i = 1;
 			} else {
 				$lists['userfield_values'] = '';
-				$lang =JFactory::getLanguage();
+				$lang =vmLanguage::getLanguage();
 				for ($i = 0; $i < $n; $i++) {
 					$translate= $lang->hasKey($userFieldValues[$i]->fieldtitle) ? " (".vmText::_($userFieldValues[$i]->fieldtitle).")" : "";
 					$lists['userfield_values'] .=
@@ -227,15 +218,13 @@ class VirtuemartViewUserfields extends VmViewAdmin {
 
 	function renderUserfieldPlugin(){
 
-		if(!class_exists('vmUserfieldPlugin')) require(VMPATH_PLUGINLIBS.DS.'vmuserfieldtypeplugin.php');
-
 		vmLanguage::loadJLang('plg_vmpsplugin', false);
-		JForm::addFieldPath(VMPATH_ADMIN . DS . 'fields');
+		JForm::addFieldPath(VMPATH_ADMIN .'/fields');
 		//$selected = $this->userField->userfield_jplugin_id;
 		//vmdebug('renderUserfieldPlugin $this->userField->element',$this->userField->type,$this->userField->element);
 		$this->userField->element = substr($this->userField->type, 6);
 
-		$path = VMPATH_ROOT .DS. 'plugins' .DS. 'vmuserfield' . DS . $this->userField->element . DS . $this->userField->element . '.xml';
+		$path = VMPATH_ROOT .'/plugins/vmuserfield/'. $this->userField->element . '/' . $this->userField->element . '.xml';
 		// Get the payment XML.
 		$formFile	= vRequest::filterPath( $path );
 		if (file_exists($formFile)){
@@ -253,7 +242,7 @@ class VirtuemartViewUserfields extends VmViewAdmin {
 		if ($this->userField->form) {
 			$form = $this->userField->form;
 			ob_start();
-			include(VMPATH_ADMIN.DS.'fields'.DS.'formrenderer.php');
+			include(VMPATH_ADMIN .'/fields/formrenderer.php');
 			$body = ob_get_contents();
 			ob_end_clean();
 			return $body;

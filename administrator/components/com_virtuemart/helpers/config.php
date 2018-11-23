@@ -7,171 +7,12 @@
  * @package	VirtueMart
  * @subpackage Helpers
  * @author Max Milbers
- * @copyright Copyright (c) 2004-2008 Soeren Eberhardt-Biermann, 2009-2017 VirtueMart Team. All rights reserved.
+ * @copyright Copyright (c) 2004-2008 Soeren Eberhardt-Biermann, 2009-2018 VirtueMart Team. All rights reserved.
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL 2, see COPYRIGHT.php
  */
 defined('_JEXEC') or die('Restricted access');
 
-/**
- *
- * We need this extra paths to have always the correct path undependent by loaded application, module or plugin
- * Plugin, module developers must always include this config at start of their application
- *   $vmConfig = VmConfig::loadConfig(); // load the config and create an instance
- *  $vmConfig -> jQuery(); // for use of jQuery
- *  Then always use the defined paths below to ensure future stability
- */
-
-class vmDefines {
-
-	static $_appId = 'site';
-
-	public static function loadJoomlaCms(){
-
-
-		if (file_exists(VMPATH_ROOT . '/defines.php'))
-		{
-			include_once VMPATH_ROOT . '/defines.php';
-		}
-
-		if (!defined('_JDEFINES'))
-		{
-			define('JPATH_BASE',VMPATH_BASE);
-			require_once JPATH_BASE . '/includes/defines.php';
-		}
-
-		require_once JPATH_BASE . '/includes/framework.php';
-
-	}
-
-	static function defines ($appId='site'){
-
-		static $incl = false;
-		if($incl) return true;
-		$incl = true;
-
-		defined('DS') or define('DS', DIRECTORY_SEPARATOR);
-
-		if(defined('JVERSION')){	//We are in joomla
-			defined ('VMPATH_ROOT') or define ('VMPATH_ROOT', JPATH_ROOT);
-			if(version_compare(JVERSION,'3.0.0','ge')) {
-				defined('JVM_VERSION') or define ('JVM_VERSION', 3);
-				defined('VM_USE_BOOTSTRAP') or define ('VM_USE_BOOTSTRAP', 1);
-			}
-			if(version_compare(JVERSION,'1.7.0','ge')) {
-				defined('JPATH_VM_LIBRARIES') or define ('JPATH_VM_LIBRARIES', JPATH_PLATFORM);
-				defined('JVM_VERSION') or define ('JVM_VERSION', 2);
-			}
-			else {
-				if (version_compare (JVERSION, '1.6.0', 'ge')) {
-					defined ('JPATH_VM_LIBRARIES') or define ('JPATH_VM_LIBRARIES', JPATH_LIBRARIES);
-					defined ('JVM_VERSION') or define ('JVM_VERSION', 2);
-				}
-				else {
-					defined ('JPATH_VM_LIBRARIES') or define ('JPATH_VM_LIBRARIES', JPATH_LIBRARIES);
-					defined ('JVM_VERSION') or define ('JVM_VERSION', 1);
-				}
-			}
-			$vmPathLibraries = JPATH_VM_LIBRARIES;
-
-			defined('WP_VERSION') or define ('WP_VERSION', 0);
-		} else {
-			defined ('JVM_VERSION') or define ('JVM_VERSION', 0);
-
-			//Todo ???? need to be checked
-			!defined ('WPINC') or define ('WP_VERSION', get_bloginfo('version'));
-
-			//defined ('VMPATH_ROOT') or define ('VMPATH_ROOT', dirname( __FILE__ ));
-
-			//defined('_JEXEC') or define('_JEXEC', 1);
-			$vmPathLibraries = VMPATH_ROOT .'/libraries';
-
-		}
-
-		defined ('VMPATH_LIBS') or define ('VMPATH_LIBS', $vmPathLibraries);
-
-		defined ('VMPATH_ADMINISTRATOR') or define ('VMPATH_ADMINISTRATOR',	VMPATH_ROOT .'/administrator');
-		defined ('VMPATH_ADMIN') or define ('VMPATH_ADMIN', VMPATH_ADMINISTRATOR .'/components/com_virtuemart' );
-
-		defined('VM_VERSION') or define ('VM_VERSION', 3);
-		/*if (!class_exists( 'JFactory' ))
-			require(VMPATH_ADMIN .'/vmf/vfactory.php');*/
-		self::$_appId = $appId;
-
-		$admin = '';
-		if($appId == 'administrator'){
-			$admin = '/administrator';//echo('in administrator');
-		}
-		defined ('VMPATH_BASE') or define ('VMPATH_BASE',VMPATH_ROOT.$admin);
-		defined ('VMPATH_THEMES') or define ('VMPATH_THEMES', VMPATH_ROOT.$admin.'/templates' );
-		defined ('VMPATH_COMPONENT') or define( 'VMPATH_COMPONENT', VMPATH_BASE .'/components/com_virtuemart' );
-
-		//vmSetStartTime('includefiles');
-
-		defined ('VM_USE_BOOTSTRAP') or define ('VM_USE_BOOTSTRAP', 0);
-		defined ('VMPATH_SITE') or define ('VMPATH_SITE', VMPATH_ROOT .'/components/com_virtuemart' );
-
-		defined ('VMPATH_PLUGINLIBS') or define ('VMPATH_PLUGINLIBS', VMPATH_ADMIN .'/plugins');
-		defined ('VMPATH_PLUGINS') or define ('VMPATH_PLUGINS', VMPATH_ROOT .'/plugins' );
-		defined ('VMPATH_MODULES') or define ('VMPATH_MODULES', VMPATH_ROOT .'/modules' );
-
-
-//legacy
-		defined ('JPATH_VM_SITE') or define('JPATH_VM_SITE', VMPATH_SITE );
-		defined ('JPATH_VM_ADMINISTRATOR') or define('JPATH_VM_ADMINISTRATOR', VMPATH_ADMIN);
-// define( 'VMPATH_ADMIN', JPATH_ROOT.'/administrator'.'/components'.'/com_virtuemart' );
-		defined('JPATH_VM_PLUGINS') or define( 'JPATH_VM_PLUGINS', VMPATH_PLUGINLIBS );
-		defined('JPATH_VM_MODULES') or define( 'JPATH_VM_MODULES', VMPATH_MODULES );
-
-		//This number is for obstruction, similar to the prefix jos_ of joomla it should be avoided
-//to use the standard 7, choose something else between 1 and 99, it is added to the ordernumber as counter
-// and must not be lowered.
-		defined('VM_ORDER_OFFSET') or define('VM_ORDER_OFFSET',3);
-
-
-
-		if(!class_exists('vmVersion')) require(VMPATH_ADMIN.'/version.php');
-		defined('VM_REV') or define('VM_REV',vmVersion::$REVISION);
-
-		$v = hash('crc32b',(VMPATH_ROOT.VM_REV));
-		defined('VM_JS_VER') or define('VM_JS_VER', $v);
-
-		if(!class_exists('vRequest')) require(VMPATH_ADMIN .'/helpers/vrequest.php');
-
-		if(!class_exists('vmText')) require(VMPATH_ADMIN .'/helpers/vmtext.php');
-		if(!class_exists('vmLanguage')) require(VMPATH_ADMIN .'/helpers/vmlanguage.php');
-
-		if(!defined('JVERSION')){
-			self::loadJoomlaCms();
-		}
-
-/*		if(!interface_exists('vIObject'))
-			require(VMPATH_ADMIN .'/vmf/vinterfaces.php');
-		if(!class_exists('vObject')) require(VMPATH_ADMIN .'/vmf/vobject.php');
-
-		if(!class_exists('vBasicModel'))
-			require(VMPATH_ADMIN .'/vmf/vbasicmodel.php');
-
-		if(!class_exists('vController')) require(VMPATH_ADMIN .'/vmf/vcontroller.php');
-*/
-		if(!class_exists('VmTable')){
-			require(VMPATH_ADMIN .'/helpers/vmtable.php');
-			VmTable::addIncludePath(VMPATH_ADMIN .'/tables','Table');
-		}
-
-		if(!class_exists('VmModel')) require(VMPATH_ADMIN .'/helpers/vmmodel.php');
-//		if(!class_exists('vUri')) require(VMPATH_ADMIN .'/vmf/environment/uri.php');
-
-		//if(!class_exists('vHtml')) require(VMPATH_ADMIN .'/vmf/html/html.php');
-		if(!class_exists('vmJsApi')) require(VMPATH_ADMIN .'/helpers/vmjsapi.php');
-
-/*		if(!class_exists('vDispatcher')) require(VMPATH_ADMIN .'/vmf/dispatcher.php');
-		if(!class_exists('vPlugin')) require(VMPATH_ADMIN .'/vmf/plugin/plugin.php');
-		if(!class_exists('vUser')) require(VMPATH_ADMIN .'/vmf/user/user.php');
-		//vmTime('Time to create Config', 'includefiles');
-*/
-		//Force Joomla to use the FE overrides
-		//defined('JPATH_SITE') or define('JPATH_SITE','VMPATH_SITE');
-	}
-}
+JLoader::register('vmDefines', JPATH_ROOT.'/administrator/components/com_virtuemart/helpers/vmdefines.php');
 
 //In WP, we run the define, when we render vm, in Joomla we have to run them here
 if(defined('JVERSION')){
@@ -204,7 +45,7 @@ function vmInfo($publicdescr,$value=NULL){
 	$type = VmConfig::$mType;//'info';
 
 	if(VmConfig::$maxMessageCount<VmConfig::$maxMessage){
-		$lang = JFactory::getLanguage();
+		$lang = vmLanguage::getLanguage();
 		if($value!==NULL){
 
 			$args = func_get_args();
@@ -248,7 +89,7 @@ function vmAdminInfo($publicdescr,$value=NULL){
 		$app = JFactory::getApplication();
 
 		if(VmConfig::$maxMessageCount<VmConfig::$maxMessage){
-			$lang = JFactory::getLanguage();
+			$lang = vmLanguage::getLanguage();
 			if($value!==NULL){
 
 				$args = func_get_args();
@@ -281,7 +122,7 @@ function vmWarn($publicdescr,$value=NULL){
 	$app = JFactory::getApplication();
 	$msg = '';
 	if(VmConfig::$maxMessageCount<VmConfig::$maxMessage){
-		$lang = JFactory::getLanguage();
+		$lang = vmLanguage::getLanguage();
 		if($value!==NULL){
 
 			$args = func_get_args();
@@ -321,7 +162,7 @@ function vmWarn($publicdescr,$value=NULL){
 function vmError($descr,$publicdescr=''){
 
 	$msg = '';
-	$lang = JFactory::getLanguage();
+	$lang = vmLanguage::getLanguage();
 	$descr = $lang->_($descr);
 	$adminmsg =  'vmError: '.$descr;
 	if (empty($descr)) {
@@ -519,7 +360,7 @@ function logInfo ($text, $type = 'message') {
 			}
 			return;
 		}
-		if(!class_exists('JFile')) require(VMPATH_LIBS.DS.'joomla'.DS.'filesystem'.DS.'file.php');
+
 		if (!JFile::exists($file)) {
 			// blank line to prevent information disclose: https://bugs.php.net/bug.php?id=60677
 			// from Joomla log file
@@ -691,19 +532,13 @@ class VmConfig {
 	static function setErrRepDebug(){
 		$ret[0] = ini_set('display_errors', '-1');
 		$cVer = phpversion();
-		if(VM_VERSION<3){
-			if(version_compare($cVer,'5.4.0','<' )){
-				$ret[1] = error_reporting( E_ALL ^ E_STRICT );
-			} else {
-				$ret[1] = error_reporting( E_ALL );
-			}
+
+		if(version_compare($cVer,'5.4.0','<' )){
+			$ret[1] = error_reporting( E_ALL );
 		} else {
-			if(version_compare($cVer,'5.4.0','<' )){
-				$ret[1] = error_reporting( E_ALL );
-			} else {
-				$ret[1] = error_reporting( E_ALL & ~E_STRICT);
-			}
+			$ret[1] = error_reporting( E_ALL & ~E_STRICT);
 		}
+
 		vmdebug('Show All Errors, PHP-Version '.$cVer);
 	}
 
@@ -936,9 +771,7 @@ class VmConfig {
 
 		self::$_jpConfig = new VmConfig();
 
-		if(!class_exists('VirtueMartModelConfig')) require(VMPATH_ADMIN .'/models/config.php');
 		$configTable  = VirtueMartModelConfig::checkConfigTableExists();
-
 
 		$db = JFactory::getDbo();
 
@@ -959,14 +792,7 @@ class VmConfig {
 			//vmdebug('Selected language '.$selectedLang.' $knownLangs ',$knownLangs);
 
 			if($app->isAdmin() and !$redirected and !in_array(vmLanguage::$currLangTag,$knownLangs)){
-				//$option = vRequest::getVar('option');
-				//VmConfig::$_debug=true;
-				//vmdebug('my option',$option,$_REQUEST);
-				//if($option!='com_languages'){
-				$msg = 'Install your selected language <b>'.vmLanguage::$currLangTag.'</b> first in <a href="'.$link.'">joomla language manager</a>, just select then the component VirtueMart under menu "component", to proceed with the installation ';
-				//$link = 'index.php?option=com_installer&view=languages&redirected=1';
-				//$app->redirect($link,$msg);
-				//}
+				$msg = 'Install your selected language <b>'.vmLanguage::$currLangTag.'</b> in <a href="'.$link.'">joomla language manager</a>';
 				$app->enqueueMessage($msg);
 			}
 
@@ -1230,8 +1056,6 @@ class vmAccess {
 
 			//echo $cuId;
 			if($cuId) {
-				if(!class_exists('vmCrypt'))
-					require(VMPATH_ADMIN.'/helpers/vmcrypt.php');
 				$cuId = vmCrypt::decrypt( $cuId );
 				if(empty($cuId)){
 					$cuId = null;

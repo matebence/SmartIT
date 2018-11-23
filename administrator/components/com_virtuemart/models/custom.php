@@ -19,8 +19,6 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
 
-if(!class_exists('VmModel'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmmodel.php');
-
 /**
  * Model for VirtueMart Customs Fields
  *
@@ -134,7 +132,6 @@ class VirtueMartModelCustom extends VmModel {
 	    $datas = new stdClass();
 		$datas->items = $this->exeSortSearchListQuery(0, $query, '',$whereString,$this->_getOrdering());
 
-		if (!class_exists('VmHTML')) require(VMPATH_ADMIN.DS.'helpers'.DS.'html.php');
 		$field_types = self::getCustomTypes() ;
 
 		foreach ($datas->items as $key => & $data) {
@@ -188,14 +185,21 @@ class VirtueMartModelCustom extends VmModel {
 	 */
 	function getCustomsList ($publishedOnly = FALSE) {
 
+		$title = 'custom_title';
+		$uniqueCustomfieldtitles = VmConfig::get('unique_customfield_titles','1');
+		if($uniqueCustomfieldtitles == '0')
+		{
+			$title = 'CONCAT(custom_title, " - ID = " ,virtuemart_custom_id)';
+		}
+
 		// get custom parents
-		$q = 'SELECT `virtuemart_custom_id` AS value ,custom_title AS text FROM `#__virtuemart_customs` WHERE custom_parent_id="0" AND field_type <> "R" AND field_type <> "Z" ';
+		$q = 'SELECT `virtuemart_custom_id` AS value ,'.$title .' AS text FROM `#__virtuemart_customs` WHERE custom_parent_id="0" AND field_type <> "R" AND field_type <> "Z" ';
 		if ($publishedOnly) {
 			$q .= 'AND `published`=1';
 		}
-		if ($ID = vRequest::getInt ('virtuemart_custom_id', 0)) {
+		/*if ($ID = vRequest::getInt ('virtuemart_custom_id', 0)) {
 			$q .= ' AND `virtuemart_custom_id`!=' . (int)$ID;
-		}
+		}*/
 		$db = JFactory::getDBO();
 		$db->setQuery ($q);
 
@@ -284,7 +288,6 @@ class VirtueMartModelCustom extends VmModel {
 
 		//I think this is obsolete, note by Max
 		if(empty($data['virtuemart_vendor_id'])){
-			if(!class_exists('VirtueMartModelVendor')) require(VMPATH_ADMIN.DS.'models'.DS.'vendor.php');
 			$data['virtuemart_vendor_id'] = VirtueMartModelVendor::getLoggedVendor();
 		} else {
 			$data['virtuemart_vendor_id'] = (int) $data['virtuemart_vendor_id'];
@@ -293,7 +296,7 @@ class VirtueMartModelCustom extends VmModel {
 		$table = $this->getTable('customs');
 
 		if(!empty($data['custom_jplugin_id']) or !empty($data['custom_element'])){
-
+//vmdebug('Storing customplugin',$data);
 			$tb = '#__extensions';
 			$ext_id = 'extension_id';
 
@@ -302,10 +305,13 @@ class VirtueMartModelCustom extends VmModel {
 			if(!empty($data['virtuemart_custom_id'])){
 				$table->load($data['virtuemart_custom_id']);
 				//For now we just override it.
-				if(!empty($table->custom_element)){
-					$data['custom_element'] = $table->custom_element;
+				if($table->custom_element != $data['custom_element'] ){
+					vmdebug('Custom exists already and has another element ',$table->custom_element,$data);
+					vmWarn('Custom exists already and has another element ',$table->custom_element);
+					return false;
 				}
 				//if(empty($data['custom_jplugin_id'])){
+					//We may need to update a reinstalled customplugin
 					$data['custom_jplugin_id'] = $table->custom_jplugin_id;
 				//}
 			}
@@ -317,14 +323,12 @@ class VirtueMartModelCustom extends VmModel {
 				$q = 'SELECT `extension_id`,`element` FROM `' . $tb . '` WHERE `element` = "'.$data['custom_element'].'" AND `' . $ext_id . '` = "'.$data['custom_jplugin_id'].'" AND `enabled`="1" AND `state`="0" ';
 				$db->setQuery($q);
 				$id = $db->loadResult();
-				if(!$id){	//Does not fit, search for id by element
-					$data['custom_jplugin_id'] = 0;
-				} else {
+				if($id){
 					$validEntry=true;
 				}
 			}
 
-			if(!$validEntry and !empty($data['custom_element']) and empty($data['custom_jplugin_id'])){
+			/*if(!$validEntry and !empty($data['custom_element']) and empty($data['custom_jplugin_id'])){
 				$q = 'SELECT `extension_id` FROM `' . $tb . '` WHERE `element` = "'.$data['custom_element'].'" AND `enabled`="1" AND `state`="0" ';
 				$db->setQuery($q);
 				$data['custom_jplugin_id'] = $db->loadResult();
@@ -335,34 +339,37 @@ class VirtueMartModelCustom extends VmModel {
 			}
 
 			if(!$validEntry and empty($data['custom_element']) and !empty($data['custom_jplugin_id'])){
-				$q = 'SELECT `element` FROM `' . $tb . '` WHERE `' . $ext_id . '` = "'.$data['custom_jplugin_id'].'" AND `enabled`="1" AND `state`="0" ';
+				//Seems to be a new entry, so we du the check without
+				$q = 'SELECT `element` FROM `' . $tb . '` WHERE `' . $ext_id . '` = "'.$data['custom_jplugin_id'].'" AND `state`="0" ';
 				$db->setQuery($q);
 				$data['custom_element'] = $db->loadResult();
 				if(!empty($data['custom_element'])){
 					$validEntry=true;
 					$updateEntry = true;
 				}
-			}
+			}*/
 
 			if(!$validEntry){
 				$q = 'SELECT * FROM `' . $tb . '` WHERE `element` = "'.$data['custom_element'].'" ';
 				$db->setQuery($q);
 				if($jids=$db->loadAssocList()){
 
-					$newJid = 0;
+
 					foreach($jids as $jid){
-						$newJid = $jid[$ext_id];
+						$newJidEntry = $jid;
 						if($jid['enabled'] == 1 and $jid['state'] == 0){
 							break;
 						}
 					}
+					$newJid = $newJidEntry[$ext_id];
+
 					vmdebug('Available entries '.$q,$newJid,$jids);
-					if(!empty($newJid)){
+					if(!empty($newJid) and !empty($newJid['enabled'])){
 						$q = 'UPDATE `#__virtuemart_customs` SET `custom_jplugin_id`="'.$jid.'" WHERE `custom_jplugin_id` = "'.$data['custom_jplugin_id'].'"';
 						$db->setQuery($q);
 						$db->execute();
 						$data['custom_jplugin_id'] = $newJid;
-						vmInfo('Old Plugin id was not available, updated entries with '.$ext_id.' = '.$newJid.' found for the same element');
+						vmInfo('Old Plugin id was not available, updated entries with '.$data['custom_jplugin_id'].' = '.$newJid.' found for the same element');
 					}
 				} else {
 					vmWarn('could not load custom_element for plugin, testing if current custom_jplugin_id is still available '.$q);
@@ -375,10 +382,7 @@ class VirtueMartModelCustom extends VmModel {
 		}
 
 		$table->field_type = $data['field_type'];
-		if($table->field_type == 'C'){
-			//vmInfo();
-			//$data['is_cart_attribute'] = 1;
-		}
+
 		$table->custom_element = $data['custom_element'];
 		$table->custom_jplugin_id = $data['custom_jplugin_id'];
 		$table->_xParams = 'custom_params';
@@ -389,18 +393,53 @@ class VirtueMartModelCustom extends VmModel {
 
 		//We are in the custom and so the table contains the field_type, else not!!
 		self::setParameterableByFieldType($table,$table->field_type);
+
 		if(empty($data['virtuemart_custom_id']) and !vmAccess::manager('custom.create')){
 			vmWarn('Insufficient permission to create custom');
 			return false;
 		}
+
+		if($table->field_type == 'S' and !empty($data['transform'])){
+			$this->transformSetStringsList($data);
+			$data['custom_value'] = $data['transform'];
+		}
+		$data['transform'] = '';
+
 		$table->bindChecknStore($data);
 
-		JPluginHelper::importPlugin('vmcustom');
-		$dispatcher = JDispatcher::getInstance();
-		$error = $dispatcher->trigger('plgVmOnStoreInstallPluginTable', array('custom' , $data, $table));
+		if($table->field_type == 'E'){
+			JPluginHelper::importPlugin('vmcustom');
+			$dispatcher = JDispatcher::getInstance();
+			$error = $dispatcher->trigger('plgVmOnStoreInstallPluginTable', array('custom' , $data, $table));
+		}
 
 		return $table->virtuemart_custom_id ;
 
+	}
+
+	public function transformSetStringsList($data){
+
+		$current = explode(';',trim($data['custom_value']));
+		$goal = explode(';',trim($data['transform']));
+
+		$db = JFactory::getDbo();
+		foreach($current as $k=>$v){
+
+			if(isset($goal[$k])){
+				$newVal = $goal[$k];
+			}
+			if($v!=$newVal){
+				$q = 'UPDATE #__virtuemart_product_customfields SET customfield_value = "'.$newVal.'" WHERE virtuemart_custom_id = "'.(int)$data['virtuemart_custom_id'].'" and customfield_value="'.$v.'" ';
+				$db->setQuery($q);
+				$res = $db->execute();
+				if($res){
+
+				}
+			}
+
+		}
+
+		return true;
 	}
 
 	/**
@@ -474,7 +513,8 @@ class VirtueMartModelCustom extends VmModel {
 			$varsToPush = array(
 				'addEmpty'		=> array(0, 'int'),
 				'selectType'	=> array(0, 'int'),
-				'multiplyPrice'	=> array('', 'string')
+				'multiplyPrice'	=> array('', 'string'),
+				'transform'	=> array('', 'area')
 			);
 		} else if($type=='M'){
 			$varsToPush = array(

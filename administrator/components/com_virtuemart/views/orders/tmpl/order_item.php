@@ -59,9 +59,6 @@ $i=0;
 		</div>
 
 		<?php
-		if (!class_exists('VirtueMartModelCustomfields')) {
-			require(VMPATH_ADMIN . DS . 'models' . DS . 'customfields.php');
-		}
 		$product_attribute = VirtueMartModelCustomfields::CustomsFieldOrderDisplay($item, 'BE');
 		if ($product_attribute) {
 			echo '<div>' . $product_attribute . '</div>';

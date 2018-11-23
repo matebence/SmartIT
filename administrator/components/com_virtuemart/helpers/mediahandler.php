@@ -8,7 +8,7 @@
  * @package	VirtueMart
  * @subpackage Helpers
  * @author Max Milbers
- * @copyright Copyright (c) 2011-2016 VirtueMart Team. All rights reserved by the author.
+ * @copyright Copyright (c) 2011-2018 VirtueMart Team. All rights reserved by the author.
  */
 
 defined('_JEXEC') or die();
@@ -84,8 +84,6 @@ class VmMediaHandler {
 			$choosed = true;
 		}
 		else if($type == 'forSale' || $type== 'file_is_forSale'){
-			if (!class_exists ('shopFunctionsF'))
-				require(VMPATH_SITE . DS . 'helpers' . DS . 'shopfunctionsf.php');
 			$relUrl = shopFunctions::checkSafePath();
 			if($relUrl){
 				$choosed = true;
@@ -121,9 +119,6 @@ class VmMediaHandler {
 
 	static function getStoriesFb($suffix = ''){
 
-		if(!class_exists('JFolder')){
-			require(VMPATH_LIBS.DS.'joomla'.DS.'filesystem'.DS.'folder.php');
-		}
 		$url = 'images/virtuemart/'. $suffix ;
 
 		if(JFolder::exists(VMPATH_ROOT .'/'.$url)) {
@@ -154,14 +149,11 @@ class VmMediaHandler {
 	 */
 	static public function createMedia($table,$type='',$file_mimetype=''){
 
-		if(!class_exists('JFile')) require(VMPATH_LIBS.DS.'joomla'.DS.'filesystem'.DS.'file.php');
-
 		$extension = strtolower(JFile::getExt($table->file_url));
 
 		$isImage = self::isImage($extension);
 
 		if($isImage){
-			if (!class_exists('VmImage')) require(VMPATH_ADMIN.DS.'helpers'.DS.'image.php');
 			$media = new VmImage();
 		} else {
 			$media = new VmMediaHandler();
@@ -228,8 +220,6 @@ class VmMediaHandler {
 			$this->file_url_folder_thumb = $this->file_url_folder.'resized/';
 			$this->file_path_folder = str_replace('/',DS,$this->file_url_folder);
 		} else {
-			if (!class_exists ('shopFunctions'))
-				require(VMPATH_SITE . DS . 'helpers' . DS . 'shopfunctions.php');
 			$safePath = shopFunctions::checkSafePath();
 			if(!$safePath){
 				return FALSE;
@@ -250,8 +240,6 @@ class VmMediaHandler {
 			$this->file_name = '';
 			$this->file_extension = '';
 		} else {
-			if(!class_exists('JFile')) require(VMPATH_LIBS.DS.'joomla'.DS.'filesystem'.DS.'file.php');
-
 			if($this->file_is_forSale==1){
 
 				$rdspos = strrpos($this->file_url,DS);
@@ -462,8 +450,8 @@ class VmMediaHandler {
 	 *
 	 * @author Max Milbers
 	 */
-	function displayMediaFull(){
-		return $this->displayMediaThumb(array('id'=>'vm_display_image'),false,'',true,true);
+	function displayMediaFull($imageArgs=array('id'=>'vm_display_image'), $lightbox=false, $effect ="class='modal'",$description = true){
+		return $this->displayMediaThumb($imageArgs ,$lightbox,$effect,true,$description);
 	}
 
 	/**
@@ -617,8 +605,16 @@ class VmMediaHandler {
 		if($lightbox){
 			$image = '<img src="' . $root.$file_url . '" alt="' . $file_alt . '" ' . $args . ' />';//JHtml::image($file_url, $file_alt, $imageArgs);
 			if ($file_alt ) $file_alt = 'title="'.$file_alt.'"';
-			if ($this->file_url and pathinfo($this->file_url, PATHINFO_EXTENSION) and substr( $this->file_url, 0, 4) != "http") $href = JURI::root() .$this->file_url ;
-			else $href = $root.$file_url ;
+			if ($this->file_url and pathinfo($this->file_url, PATHINFO_EXTENSION) and substr( $this->file_url, 0, 4) != "http") {
+				if($this->file_is_forSale){
+					$href = $this->file_url ;
+				} else {
+					$href = JURI::root() .$this->file_url ;
+				}
+
+			} else {
+				$href = $root.$file_url ;
+			}
 
 			if ($this->file_is_downloadable) {
 				$lightboxImage = '<a '.$file_alt.' '.$effect.' href="'.$href.'">'.$image.$desc.'</a>';
@@ -642,7 +638,6 @@ class VmMediaHandler {
 	 * @return name of the uploaded file
 	 */
 	function uploadFile($urlfolder,$overwrite = false){
-		if(!class_exists('vmUploader')) require(VMPATH_ADMIN . DS . 'helpers' . DS . 'vmuploader.php');
 		$r = vmUploader::uploadFile($urlfolder,$this,$overwrite);
 		return $r;
 	}
@@ -664,7 +659,6 @@ class VmMediaHandler {
 			vmTrace('deleteFile empty url was given');
 			return false;
 		}
-		if(!class_exists('JFile')) require(VMPATH_LIBS.DS.'joomla'.DS.'filesystem'.DS.'file.php');
 
 		$file_path = str_replace('/',DS,$url);
 		if($absPathGiv){
@@ -778,6 +772,8 @@ class VmMediaHandler {
 		}
 		else if( $data['media_action'] == 'replace_thumb' ){
 
+			//always delete the thumb
+			$this->deleteThumbs();
 			$oldFileUrlThumb = $this->getFileUrlThumb();
 			$oldFileUrl = $this->file_url_folder_thumb;
 			$file_name = $this->uploadFile($this->file_url_folder_thumb,true);
@@ -838,7 +834,6 @@ class VmMediaHandler {
 			vmdebug('the Urls',$data['media_roles'],$typelessUrl,$this->file_url_folder.$this->file_name);
 			if(!file_exists($this->file_url_folder.$this->file_name) and file_exists($typelessUrl)){
 				vmdebug('Execute move');
-				if(!class_exists('JFile')) require(VMPATH_LIBS.DS.'joomla'.DS.'filesystem'.DS.'file.php');
 				JFile::move($typelessUrl, $this->file_url_folder.$this->file_name);
 			}
 		}
@@ -1155,7 +1150,7 @@ class VmMediaHandler {
 	<label for="published">'. vmText::_('COM_VIRTUEMART_FILES_FORM_FILE_PUBLISHED') .'</label>
 </td>
 <td>';
-		if(!class_exists('VmHtml')) require(VMPATH_ADMIN.DS.'helpers'.DS.'html.php');
+
 		$html .= VmHtml::checkbox('media[media_published]',$checked,1,0,'class="inputbox"','media[media_published]') ;
 		//<input type="checkbox" class="inputbox" id="media_published'.$identify.'" name="media_published'.$identify.'" '.$checked.' size="16" value="1" />
 
@@ -1257,8 +1252,6 @@ class VmMediaHandler {
 			} else if(empty($vendorId)) {
 				$vendorId = $this->virtuemart_vendor_id;
 			}
-			if (!class_exists('ShopFunctions'))
-				require(VMPATH_ADMIN . DS . 'helpers' . DS . 'shopfunctions.php');
 			$vendorList = ShopFunctions::renderVendorList($vendorId, 'media[virtuemart_vendor_id]');
 			$html .=  VmHTML::row('raw','COM_VIRTUEMART_VENDOR', $vendorList );
 		}

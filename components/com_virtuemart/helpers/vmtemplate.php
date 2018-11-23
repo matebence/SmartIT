@@ -207,12 +207,12 @@ class VmTemplate {
 			$template = $res['template'];
 		}
 
-		if(is_dir( VMPATH_ROOT.DS.'templates'.DS.$template )) {
+		if(is_dir( VMPATH_ROOT .'/templates/'.$template )) {
 			$app = JFactory::getApplication();
 			if($app->isSite()) $app->setTemplate($template,$registry);
 
 		} else {
-			vmError( 'The chosen template couldnt be found on the filesystem: '.VMPATH_ROOT.DS.'templates'.DS.$template );
+			vmError( 'The chosen template couldnt be found on the filesystem: '.VMPATH_ROOT.'/templates/'.$template );
 		}
 
 		return $template;

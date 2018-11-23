@@ -17,9 +17,6 @@ defined ('_JEXEC') or die('Restricted access');
  * other free or open source software licenses.
  * @version $Id$
  */
-if (!class_exists ('vmPlugin')) {
-	require(VMPATH_PLUGINLIBS . DS . 'vmplugin.php');
-}
 
 abstract class vmPSPlugin extends vmPlugin {
 
@@ -109,7 +106,7 @@ abstract class vmPSPlugin extends vmPlugin {
 	 * @param object  $cart Cart object
 	 * @param integer $selected ID of the method selected
 	 * @return boolean True on success, false on failures, null when this plugin was not selected.
-	 * On errors, JError::raiseWarning (or JError::raiseError) must be used to set a message.
+	 * On errors, vmWarn) must be used to set a message.
 	 *
 	 * @author Valerie Isaksen
 	 * @author Max Milbers
@@ -544,9 +541,7 @@ abstract class vmPSPlugin extends vmPlugin {
 
 	function decryptFields($method){
 		if($this->_cryptedFields and is_array($this->_cryptedFields)){
-			if(!class_exists('vmCrypt')){
-				require(VMPATH_ADMIN .'/helpers/vmcrypt.php');
-			}
+
 			if(isset($method->modified_on) and $method->modified_on!='0000-00-00 00:00:00'){
 				$date = JFactory::getDate($method->modified_on);
 				$date = $date->toUnix();
@@ -702,9 +697,6 @@ abstract class vmPSPlugin extends vmPlugin {
 	 */
 	protected function storePSPluginInternalData ($values, $primaryKey = 0, $preload = FALSE) {
 
-		if (!class_exists ('VirtueMartModelOrders')) {
-			require(VMPATH_ADMIN . DS . 'models' . DS . 'orders.php');
-		}
 		if (!isset($values['virtuemart_order_id'])) {
 			$values['virtuemart_order_id'] = VirtueMartModelOrders::getOrderIdByOrderNumber ($values['order_number']);
 		}
@@ -764,9 +756,7 @@ abstract class vmPSPlugin extends vmPlugin {
 		$img = "";
 
 		if (!(empty($logo_list))) {
-			if(!class_exists('JFolder')){
-				require(VMPATH_LIBS.DS.'joomla'.DS.'filesystem'.DS.'folder.php');
-			}
+
 			$url ='images/virtuemart/' . $this->_psType ;
 
 			if(!JFolder::exists( VMPATH_ROOT .'/'. $url)){
@@ -781,7 +771,7 @@ abstract class vmPSPlugin extends vmPlugin {
 			}
 			foreach ($logo_list as $logo) {
 				if(!empty($logo)){
-					if(JFile::exists(VMPATH_ROOT .DS. $url .DS.$logo)){
+					if(JFile::exists(VMPATH_ROOT .'/'. $url .'/'. $logo)){
 						$alt_text = substr ($logo, 0, strpos ($logo, '.'));
 						$img .= '<span class="vmCart' . ucfirst($this->_psType) . 'Logo" ><img align="middle" src="' . JUri::root().$url.'/'.$logo . '"  alt="' . $alt_text . '" /></span> ';
 					}
@@ -827,9 +817,6 @@ abstract class vmPSPlugin extends vmPlugin {
 			$checked = '';
 		}
 
-		if (!class_exists ('CurrencyDisplay')) {
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'currencydisplay.php');
-		}
 		$currency = CurrencyDisplay::getInstance ();
 		$costDisplay = "";
 		if ($pluginSalesPrice) {
@@ -873,7 +860,7 @@ abstract class vmPSPlugin extends vmPlugin {
 
 	protected function getHtmlRow ($key, $value, $class = '') {
 
-		$lang = JFactory::getLanguage ();
+		$lang = vmLanguage::getLanguage ();
 		$key_text = '';
 		$complete_key = strtoupper ($this->_type . '_' . $key);
 
@@ -910,12 +897,14 @@ abstract class vmPSPlugin extends vmPlugin {
 			return FALSE;
 		}
 
-		foreach ($this->methods as $method) {
+		foreach ($this->methods as $k=>$method) {
 			if ($nb = (int)$this->checkConditions ($cart, $method, $cart_prices)) {
 
 				$nbMethod = $nbMethod + $nb;
 				$idName = $this->_idName;
 				$method_id = $method->$idName;
+			} else {
+				unset($this->methods[$k]);
 			}
 		}
 		return $nbMethod;
@@ -1010,7 +999,8 @@ abstract class vmPSPlugin extends vmPlugin {
 		}
 		$cartPrice = !empty($cart->cartPrices['withTax'])? $cart->cartPrices['withTax']:$cart->cartPrices['salesPrice'];
 
-		if(!isset($method->cost_per_transaction)) $method->cost_per_transaction = 0.0;
+		if(empty($method->cost_per_transaction)) $method->cost_per_transaction = 0.0;
+		if(empty($method->cost_percent_total)) $method->cost_percent_total = 0.0;
 
 		$costs = $method->cost_per_transaction + $cartPrice * $method->cost_percent_total * 0.01;
 		if(!empty($method->cost_min_transaction) and $method->cost_min_transaction!='' and $costs < $method->cost_min_transaction){
@@ -1069,9 +1059,6 @@ abstract class vmPSPlugin extends vmPlugin {
 
 	function setCartPrices (VirtueMartCart $cart, &$cart_prices, $method, $progressive = true) {
 
-		if (!class_exists ('calculationHelper')) {
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'calculationh.php');
-		}
 		$calculator = calculationHelper::getInstance ();
 
 		$_psType = ucfirst ($this->_psType);
@@ -1248,18 +1235,19 @@ abstract class vmPSPlugin extends vmPlugin {
 			$modelOrder->updateStatusForOneOrder ($order['details']['BT']->virtuemart_order_id, $order, TRUE);
 
 			$order['paymentName'] = $payment_name;
-			//if(!class_exists('shopFunctionsF')) require(VMPATH_SITE.DS.'helpers'.DS.'shopfunctionsf.php');
 			//shopFunctionsF::sentOrderConfirmedEmail($order);
 			//We delete the old stuff
 			$cart->emptyCart ();
-			vRequest::setVar ('html', $html);
+			//vRequest::setVar ('html', $html);
+			$cart->orderdoneHtml = $html;
 			// payment echos form, but cart should not be emptied, data is valid
 		} elseif ($returnValue == 2) {
 			$cart->_confirmDone = false;
 			$cart->_dataValidated = false;
 			$cart->_inConfirm = false;
+			//vRequest::setVar ('html', $html);
+			$cart->orderdoneHtml = $html;
 			$cart->setCartIntoSession (false,true);
-			vRequest::setVar ('html', $html);
 		} elseif ($returnValue == 0) {
 			// error while processing the payment
 			$mainframe = JFactory::getApplication ();
@@ -1275,9 +1263,7 @@ abstract class vmPSPlugin extends vmPlugin {
 	 */
 	static function getAmountInCurrency($amount, $currencyId){
 		$return = array();
-		if (!class_exists ('CurrencyDisplay')) {
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'currencydisplay.php');
-		}
+
 		$paymentCurrency = CurrencyDisplay::getInstance($currencyId);
 
 		$return['value'] = $paymentCurrency->roundForDisplay($amount,$currencyId,1.0,false,2);
@@ -1297,9 +1283,6 @@ abstract class vmPSPlugin extends vmPlugin {
 
 	function emptyCart ($session_id = NULL, $order_number = NULL) {
 
-		if (!class_exists ('VirtueMartCart')) {
-			require(VMPATH_SITE . DS . 'helpers' . DS . 'cart.php');
-		}
 		$this->logInfo ('Notification: emptyCart ' . $session_id, 'message');
 		if ($session_id != NULL and $order_number != NULL) {
 			// Recover session from the storage session in wich the payment is done
@@ -1376,7 +1359,7 @@ abstract class vmPSPlugin extends vmPlugin {
 			if(empty($tcart) or json_last_error()!=JSON_ERROR_NONE){
 				return false;
 			}
-			if (!class_exists('VirtueMartCart')) require(VMPATH_SITE . DS . 'helpers' . DS . 'cart.php');
+
 			if($tcart->virtuemart_cart_id){
 				$model = new VmModel();
 				$carts = $model->getTable('carts');
@@ -1441,10 +1424,6 @@ abstract class vmPSPlugin extends vmPlugin {
 
 		if ($virtuemart_order_id) {
 			// set the order to cancel , to handle the stock correctly
-			if (!class_exists ('VirtueMartModelOrders')) {
-				require(VMPATH_ADMIN . DS . 'models' . DS . 'orders.php');
-			}
-
 			$modelOrder = VmModel::getModel ('orders');
 			$order['order_status'] = 'X';
 			$order['virtuemart_order_id'] = $virtuemart_order_id;

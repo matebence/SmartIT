@@ -45,6 +45,7 @@ if ($product_parent_id=vRequest::getInt('product_parent_id', false))   $col_prod
 					echo $this->lists['search_type'];
 					echo $this->lists['search_order'];
 					echo vmJsApi::jDate($this->search_date, 'search_date');
+					echo $this->lists['customlist'];
 					echo $this->lists['vendors'];
 				?>
 				<button  class="btn btn-small" onclick="this.form.submit();"><?php echo vmText::_('COM_VIRTUEMART_GO'); ?></button>
@@ -125,7 +126,7 @@ if($this->pagination->limit<=$mediaLimit or $totalList<=$mediaLimit){
 				if(empty($product->product_name)){
 					$product->product_name = vmText::sprintf('COM_VM_TRANSLATION_MISSING','virtuemart_product_id',$product->virtuemart_product_id);
 				}
-				echo JHtml::_('link', JRoute::_($link), $product->product_name, array('title' => vmText::_('COM_VIRTUEMART_EDIT').' '. htmlentities($product->product_name))); ?>
+				echo JHtml::_('link', JRoute::_($link), $product->product_name, array('title' => vmText::_('COM_VIRTUEMART_EDIT').' '. vRequest::vmHtmlEntities($product->product_name))); ?>
 					<!-- </span>  -->
 				</td>
 
@@ -158,7 +159,7 @@ if($this->pagination->limit<=$mediaLimit or $totalList<=$mediaLimit){
 						//echo JHtml::_('link', $link, '<span class="icon-nofloat vmicon vmicon-16-media"></span> ('.$product->mediaitems.')', array('title' => vmText::_('COM_VIRTUEMART_MEDIA_MANAGER').' '.$product->product_name) );
 						$img = '<span class="icon-nofloat vmicon vmicon-16-media"></span> ('.$product->mediaitems.')';
 					}
-					echo JHtml::_('link', $link, $img,  array('title' => vmText::_('COM_VIRTUEMART_MEDIA_MANAGER').' '.htmlentities($product->product_name)));
+					echo JHtml::_('link', $link, $img,  array('title' => vmText::_('COM_VIRTUEMART_MEDIA_MANAGER').' '.vRequest::vmHtmlEntities($product->product_name)));
 					?>
 					</td>
 				<!-- Product SKU -->
@@ -172,6 +173,10 @@ if($this->pagination->limit<=$mediaLimit or $totalList<=$mediaLimit){
 				<!-- Category name -->
 				<td><?php
 					echo $product->categoriesList;
+					//  show canonical category if set
+					if(!empty($product->product_canon_category_id)  && $product->product_canon_category_id > 0){
+						echo '<p style = "color:red;">CanonCat: '. $product->canonCatIdname.'</p>';
+					}
 				?></td>
 				<!-- Reorder only when category ID is present -->
 				<?php if ($this->categoryId ) { ?>

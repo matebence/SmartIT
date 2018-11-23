@@ -14,14 +14,11 @@
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
- * @version $Id: view.html.php 9420 2017-01-12 09:35:36Z Milbo $
+ * @version $Id: view.html.php 9869 2018-06-13 09:03:47Z Milbo $
  */
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-
-// Load the view framework
-if(!class_exists('VmViewAdmin'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmin.php');
 
 /**
  * Description
@@ -29,22 +26,13 @@ if(!class_exists('VmViewAdmin'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmi
  * @package		VirtueMart
  * @author valérie isaksen
  */
-if (!class_exists('VirtueMartModelCurrency'))
-require(VMPATH_ADMIN . DS . 'models' . DS . 'currency.php');
 
 class VirtuemartViewPaymentMethod extends VmViewAdmin {
 
 	function display($tpl = null) {
 
 		// Load the helper(s)
-		$this->addHelperPath(VMPATH_ADMIN.DS.'helpers');
-
-		if (!class_exists('VmHTML'))
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'html.php');
-
-		if (!class_exists ('vmPSPlugin')) {
-			require(VMPATH_PLUGINLIBS . DS . 'vmpsplugin.php');
-		}
+		//$this->addHelperPath(VMPATH_ADMIN.DS.'helpers');
 
 		$this->user = JFactory::getUser();
 		$model = VmModel::getModel('paymentmethod');
@@ -64,18 +52,14 @@ class VirtuemartViewPaymentMethod extends VmViewAdmin {
 
 		if ($layoutName == 'edit') {
 
-			// Load the helper(s)
-			if (!class_exists('VmImage'))
-				require(VMPATH_ADMIN . DS . 'helpers' . DS . 'image.php');
-
 			vmLanguage::loadJLang('plg_vmpsplugin', false);
 
-			JForm::addFieldPath(VMPATH_ADMIN . DS . 'fields');
+			JForm::addFieldPath(VMPATH_ADMIN .'/fields');
 
 			$payment = $model->getPayment();
 
 			// Get the payment XML.
-			$formFile	= vRequest::filterPath( VMPATH_ROOT .DS. 'plugins'. DS. 'vmpayment' .DS. $payment->payment_element .DS. $payment->payment_element . '.xml');
+			$formFile	= vRequest::filterPath( VMPATH_ROOT .'/plugins/vmpayment/'. $payment->payment_element .'/'. $payment->payment_element . '.xml');
 			if (file_exists($formFile)){
 
 				$payment->form = JForm::getInstance($payment->payment_element, $formFile, array(),false, '//vmconfig | //config[not(//vmconfig)]');
@@ -93,8 +77,7 @@ class VirtuemartViewPaymentMethod extends VmViewAdmin {
 			$this->shopperGroupList = ShopFunctions::renderShopperGroupList($payment->virtuemart_shoppergroup_ids, true);
 
 			if($this->showVendors()){
-				$vendorList= ShopFunctions::renderVendorList($payment->virtuemart_vendor_id);
-				$this->assignRef('vendorList', $vendorList);
+				$this->vendorList= ShopFunctions::renderVendorList($payment->virtuemart_vendor_id);
 			}
 
 			$currency_model = VmModel::getModel ('currency');
@@ -119,7 +102,7 @@ class VirtuemartViewPaymentMethod extends VmViewAdmin {
 
 			foreach ($this->payments as &$data){
 				// Write the first 5 shoppergroups in the list
-				$data->paymShoppersList = shopfunctions::renderGuiList($data->virtuemart_shoppergroup_ids,'shoppergroups','shopper_group_name','payment' );
+				$data->paymShoppersList = shopfunctions::renderGuiList($data->virtuemart_shoppergroup_ids,'shoppergroups','shopper_group_name','shoppergroup' );
 			}
 
 			$this->pagination = $model->getPagination();

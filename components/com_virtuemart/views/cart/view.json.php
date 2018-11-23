@@ -19,9 +19,6 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
 
-// Load the view framework
-if(!class_exists('VmView'))require(VMPATH_SITE.DS.'helpers'.DS.'vmview.php');
-
 /**
  * View for the shopping cart
  * @package VirtueMart
@@ -35,12 +32,9 @@ class VirtueMartViewCart extends VmView {
 		if (!$layoutName) $layoutName = vRequest::getCmd('layout', 'default');
 		$this->assignRef('layoutName', $layoutName);
 
-		if (!class_exists('VirtueMartCart'))
-		require(VMPATH_SITE . DS . 'helpers' . DS . 'cart.php');
 		$this->cart = VirtueMartCart::getCart();
 
     	$this->prepareContinueLink();
-		if(!class_exists('VmTemplate')) require(VMPATH_SITE.DS.'helpers'.DS.'vmtemplate.php');
 		VmTemplate::setVmTemplate($this, 0, 0, $layoutName);
 
 		parent::display($tpl);

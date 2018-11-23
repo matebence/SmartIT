@@ -19,8 +19,6 @@
 // Check to ensure this custom is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
 
-if(!class_exists('VmTable'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmtable.php');
-
 /**
  * Custom table class
  * The class is to manage description of custom fields in the shop.
@@ -87,7 +85,11 @@ class TableCustoms extends VmTable {
 
 		$this->_cidName = 'virtuemart_custom_id';
 
-		$this->setUniqueName('custom_title');
+		$uniqueCustomfieldtitles = VmConfig::get('unique_customfield_titles','1');
+		if($uniqueCustomfieldtitles == '1') {
+			$this->setUniqueName('custom_title');
+		}
+
 		$this->setObligatoryKeys('field_type');
 
 		$this->setLoggable();

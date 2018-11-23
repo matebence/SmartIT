@@ -13,7 +13,7 @@
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
-* @version $Id: default.php 9802 2018-03-20 15:22:11Z Milbo $
+* @version $Id: default.php 9843 2018-05-18 22:39:36Z Milbo $
 */
 
 // Check to ensure this file is included in Joomla!
@@ -31,12 +31,7 @@ AdminUIHelper::startAdminArea($this);
 					<?php echo vmText::_('COM_VIRTUEMART_FILTER'); ?>:
 					<input type="text" name="search" id="search" value="<?php echo $this->lists['search'];?>" class="text_area" onchange="document.adminForm.submit();" />
 					<?php
-
-					$searchOptionTables = array(
-						'0' => array('searchTable' => 'juser', 'searchTable_name' => vmText::_('COM_VIRTUEMART_ONLY_JUSER')),
-						'1' => array('searchTable' => 'all', 'searchTable_name' => vmText::_('JALL'))
-					);
-					echo JHtml::_('Select.genericlist', $searchOptionTables, 'searchTable', '', 'searchTable', 'searchTable_name', $this->searchTable );
+                        echo $this->searchOptions;
 					?>
 					<button class="btn btn-small" onclick="this.form.submit();"><?php echo vmText::_('COM_VIRTUEMART_GO'); ?></button>
 					<button class="btn btn-small" onclick="document.adminForm.search.value='';this.form.submit();"><?php echo vmText::_('COM_VIRTUEMART_RESET'); ?></button>
@@ -71,7 +66,7 @@ AdminUIHelper::startAdminArea($this);
 			$row = $this->userList[$i];
 			$checked = JHtml::_('grid.id', $i, $row->id);
 			$editlink = JROUTE::_('index.php?option=com_virtuemart&view=user&task=edit&virtuemart_user_id[]=' . $row->id);
-			$is_vendor = $this->toggle($row->is_vendor, $i, 'toggle.user_is_vendor');
+			$is_vendor = $this->toggle($row->user_is_vendor, $i, 'toggle.user_is_vendor');
 		?>
 			<tr class="row<?php echo $k ; ?>">
 				<td class="admin-checkbox">

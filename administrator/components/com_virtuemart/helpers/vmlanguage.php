@@ -1,4 +1,6 @@
 <?php
+defined ('_JEXEC') or die();
+
 /**
  * vmLanguage class
  *
@@ -8,6 +10,7 @@
  * @subpackage Language
  * @author Max Milbers
  * @copyright Copyright (c) 2016 - 2017 VirtueMart Team. All rights reserved.
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL 2, see COPYRIGHT.php
  */
 
 class vmLanguage {
@@ -36,7 +39,7 @@ class vmLanguage {
 			VmConfig::$jDefLang = strtolower(strtr(VmConfig::$jDefLangTag,'-','_'));
 		}
 
-		$l = JFactory::getLanguage();
+		$l = vmLanguage::getLanguage();
 		//Set the "joomla selected language tag" and the joomla language to vmText
 		self::$jSelLangTag = $l->getTag();
 		self::$languages[self::$jSelLangTag] = $l;

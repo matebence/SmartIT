@@ -13,14 +13,11 @@
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
-* @version $Id: view.html.php 9420 2017-01-12 09:35:36Z Milbo $
+* @version $Id: view.html.php 9831 2018-05-07 13:45:33Z Milbo $
 */
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-
-// Load the view framework
-if(!class_exists('VmViewAdmin'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmin.php');
 
 /**
  * Description
@@ -32,9 +29,6 @@ if(!class_exists('VmViewAdmin'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmi
 class VirtuemartViewCalc extends VmViewAdmin {
 
 	function display($tpl = null) {
-
-		if (!class_exists('VmHTML'))
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'html.php');
 
 		$model = VmModel::getModel('calc');
 
@@ -82,10 +76,6 @@ class VirtuemartViewCalc extends VmViewAdmin {
 			$this->currencies = $currencyModel->getCurrencies();
 
 			$this->shopperGroupList= ShopFunctions::renderShopperGroupList($calc->virtuemart_shoppergroup_ids,True);
-
-			if (!class_exists ('ShopFunctionsF')) {
-				require(VMPATH_SITE . DS . 'helpers' . DS . 'shopfunctionsf.php');
-			}
 
 			$this->countriesList = ShopFunctionsF::renderCountryList($calc->calc_countries,True);
 			$this->statesList = ShopFunctionsF::renderStateList($calc->virtuemart_state_ids,'', True, 0, array(), 'virtuemart_state_id', '');
@@ -179,7 +169,6 @@ class VirtuemartViewCalc extends VmViewAdmin {
 		'3' => array('calc_value_mathop' => '-%', 'calc_value_mathop_name' => '-%')
 		);
 
-		if (!class_exists('vmCalculationPlugin')) require(VMPATH_PLUGINLIBS . DS . 'vmcalculationplugin.php');
 		JPluginHelper::importPlugin('vmcalculation');
 		$dispatcher = JDispatcher::getInstance();
 

@@ -13,13 +13,11 @@
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
-* @version $Id: order_items.php 9756 2018-02-01 17:36:01Z Milbo $
+* @version $Id: order_items.php 9831 2018-05-07 13:45:33Z Milbo $
 */
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-
-if(!class_exists('VmTable'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmtable.php');
 
 /**
  * Order item table class

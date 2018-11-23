@@ -19,9 +19,6 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
 
-// Load the view framework
-if(!class_exists('VmViewAdmin'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmin.php');
-
 /**
  * HTML View class for the VirtueMart Component
  *
@@ -31,11 +28,6 @@ if(!class_exists('VmViewAdmin'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmi
 class VirtuemartViewCustom extends VmViewAdmin {
 
 	function display($tpl = null) {
-
-		// Load the helper(s)
-		if (!class_exists('VmHTML'))
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'html.php');
-		if(!class_exists('vmCustomPlugin')) require(VMPATH_PLUGINLIBS.DS.'vmcustomplugin.php');
 
 		$model = VmModel::getModel('custom');
 
@@ -62,10 +54,10 @@ class VirtuemartViewCustom extends VmViewAdmin {
 			$this->custom->form = false;
 			if(!empty($this->custom->custom_jplugin_id)) {
 				vmLanguage::loadJLang('plg_vmpsplugin', false);
-				JForm::addFieldPath(VMPATH_ADMIN . DS . 'fields');
+				JForm::addFieldPath(VMPATH_ADMIN .'/fields');
 				$selected = $this->custom->custom_jplugin_id;
 				// Get the payment XML.
-				$formFile	= vRequest::filterPath( VMPATH_ROOT .DS. 'plugins'.DS. 'vmcustom' .DS. $this->custom->custom_element . DS . $this->custom->custom_element . '.xml');
+				$formFile	= vRequest::filterPath( VMPATH_ROOT .'/plugins/vmcustom/'. $this->custom->custom_element . '/' . $this->custom->custom_element . '.xml');
 				if (file_exists($formFile)){
 
 					$this->custom->form = JForm::getInstance($this->custom->custom_element, $formFile, array(),false, '//vmconfig | //config[not(//vmconfig)]');
@@ -79,7 +71,7 @@ class VirtuemartViewCustom extends VmViewAdmin {
 				$varsToPush = VirtueMartModelCustom::getVarsToPush($this->custom->field_type);
 
 				if(!empty($varsToPush)){
-					JForm::addFieldPath(VMPATH_ADMIN . DS . 'fields');
+					JForm::addFieldPath(VMPATH_ADMIN .'/fields');
 					$formString = '<vmconfig>'.chr(10).'<fields name="params">'.chr(10).'<fieldset name="extraParams">'.chr(10);
 
 					foreach($varsToPush as $key => $push){
@@ -101,6 +93,8 @@ class VirtuemartViewCustom extends VmViewAdmin {
     											<option value="1">JYES</option>';
 						} else if($push[1]=='string'){
 							$formString .= 'type="text" >'.chr(10);
+						} else if($push[1]=='area'){
+							$formString .= 'type="textarea" cols="10">'.chr(10);
 						}
 						$formString .= chr(10).'</field>'.chr(10);
 					}
@@ -151,9 +145,6 @@ class VirtuemartViewCustom extends VmViewAdmin {
 
 		$results = $db->loadAssocList($ext_id);
 
-		if (!class_exists('vmPlugin'))
-			require(VMPATH_ADMIN . DS . 'plugins' . DS . 'vmplugin.php');
-
 		foreach ($results as $result) {
         //$filename = 'plg_' .strtolower ( $result['name']).'.sys';
         //$lang->load($filename, JPATH_ADMINISTRATOR);
@@ -173,9 +164,7 @@ class VirtuemartViewCustom extends VmViewAdmin {
 	public function displayCustomFields ($datas) {
 
 		$identify = ''; // ':'.$this->virtuemart_custom_id;
-		if (!class_exists ('VmHTML')) {
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'html.php');
-		}
+
 		if ($datas->field_type) {
 			$this->addHidden ('field_type', $datas->field_type);
 		}

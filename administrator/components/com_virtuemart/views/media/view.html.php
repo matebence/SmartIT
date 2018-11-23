@@ -13,14 +13,11 @@
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
-* @version $Id: view.html.php 9802 2018-03-20 15:22:11Z Milbo $
+* @version $Id: view.html.php 9906 2018-08-03 09:29:40Z Milbo $
 */
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-
-// Load the view framework
-if(!class_exists('VmViewAdmin'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmin.php');
 
 /**
  * HTML View class for the VirtueMart Component
@@ -31,9 +28,6 @@ if(!class_exists('VmViewAdmin'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmi
 class VirtuemartViewMedia extends VmViewAdmin {
 
 	function display($tpl = null) {
-
-		if (!class_exists('VmHTML'))
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'html.php');
 
 		$this->vendorId=vmAccess::isSuperVendor();
 
@@ -88,7 +82,7 @@ class VirtuemartViewMedia extends VmViewAdmin {
 				$vendorId = strtolower (JFactory::getApplication()->getUserStateFromRequest ('com_virtuemart.media.virtuemart_vendor_id', 'virtuemart_vendor_id', $vendorId, 'int'));
 			}
 
-			$this->lists['vendors'] = Shopfunctions::renderVendorList($vendorId);
+			$this->lists['vendors'] = Shopfunctions::renderVendorList($vendorId, 'virtuemart_vendor_id', true);
 			$options = array( '' => vmText::_('COM_VIRTUEMART_LIST_ALL_ROLES'),
 				'file_is_displayable' => vmText::_('COM_VIRTUEMART_FORM_MEDIA_DISPLAYABLE'),
 				'file_is_downloadable' => vmText::_('COM_VIRTUEMART_FORM_MEDIA_DOWNLOADABLE'),
@@ -96,7 +90,13 @@ class VirtuemartViewMedia extends VmViewAdmin {
 				);
 			$this->lists['search_role'] = VmHTML::selectList('search_role', vRequest::getVar('search_role'),$options,1,'','onchange="this.form.submit();" style="width:180px"');
 
-			$this->files = $model->getFiles(false,false,$virtuemart_product_id,$cat_id);
+			$findUnusedMedias = vRequest::getWord('findUnusedMedias', false);
+			if($findUnusedMedias){
+				$this->files = $model->findUnusedMedias();
+			} else {
+				$this->files = $model->getFiles(false,false,$virtuemart_product_id,$cat_id);
+			}
+
 
 			$this->pagination = $model->getPagination();
 

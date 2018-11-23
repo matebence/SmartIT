@@ -7,21 +7,17 @@
  * @subpackage Orders
  * @author Oscar van Eijk, Max Milbers
  * @link https://virtuemart.net
- * @copyright Copyright (c) 2004 - 2015 VirtueMart Team. All rights reserved.
+ * @copyright Copyright (c) 2004 - 2018 VirtueMart Team. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  * VirtueMart is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
- * @version $Id: view.html.php 9656 2017-10-25 11:20:38Z Milbo $
+ * @version $Id: view.html.php 9952 2018-10-01 12:01:00Z Milbo $
  */
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-
-// Load the view framework
-if(!class_exists('VmView'))require(VMPATH_SITE.DS.'helpers'.DS.'vmview.php');
-
 
 /**
  * Handle the orders view
@@ -69,19 +65,36 @@ class VirtuemartViewOrders extends VmView {
 
 		$this->order_list_link = JRoute::_('index.php?option=com_virtuemart&view=orders&layout=list', FALSE);
 
-		$this->trackingByOrderPass = -1;
+
+		$ordertracking = VmConfig::get('ordertracking','guests');
+		$this->trackingByOrderPass = false; //(VmConfig::get( 'orderGuestLink', 0 ) or !VmConfig::get('oncheckout_only_registered',0)) ;
+		if($ordertracking == 'guests' or $ordertracking == 'guestlink'){
+			$this->trackingByOrderPass = true;
+		}
+
 		if ($layoutName == 'details') {
-			$orderDetails = $orderModel ->getMyOrderDetails();
-			if(!$orderDetails or empty($orderDetails['details'])){
-				$layoutName = 'list';
-				$this->setLayout($layoutName);
-				if($orderDetails) {
-					$this->trackingByOrderPass = false;
-				} else {
-					vmInfo('COM_VIRTUEMART_ORDER_NOTFOUND');
-					//return;
+
+			$orderPass = vRequest::getString( 'order_pass', false );
+			if($_currentUser->guest and (!$this->trackingByOrderPass or !$orderPass)){
+				vmInfo('COM_VIRTUEMART_ORDER_CONNECT_FORM');
+				$orderDetails = false;
+				parent::display($tpl);
+				return true;
+			} else {
+				$orderDetails = $orderModel ->getMyOrderDetails();
+				if(!$orderDetails or empty($orderDetails['details'])){
+					$layoutName = 'list';
+					$this->setLayout($layoutName);
+					if($orderDetails) {
+						$this->trackingByOrderPass = false;
+					} else {
+						vmInfo('COM_VIRTUEMART_ORDER_NOTFOUND');
+						//return;
+					}
 				}
 			}
+
+
 		}
 
 		if ($layoutName == 'details') {
@@ -110,13 +123,13 @@ class VirtuemartViewOrders extends VmView {
 			);
 
 			$this->shipment_name='';
-			if (!class_exists('vmPSPlugin')) require(VMPATH_PLUGINLIBS . DS . 'vmpsplugin.php');
+
 			JPluginHelper::importPlugin('vmshipment');
 			$dispatcher = JDispatcher::getInstance();
 			$returnValues = $dispatcher->trigger('plgVmOnShowOrderFEShipment',array(  $orderDetails['details']['BT']->virtuemart_order_id, $orderDetails['details']['BT']->virtuemart_shipmentmethod_id, &$this->shipment_name));
 
 			$this->payment_name='';
-			if(!class_exists('vmPSPlugin')) require(VMPATH_PLUGINLIBS.DS.'vmpsplugin.php');
+
 			JPluginHelper::importPlugin('vmpayment');
 			$dispatcher = JDispatcher::getInstance();
 			$returnValues = $dispatcher->trigger('plgVmOnShowOrderFEPayment',array( $orderDetails['details']['BT']->virtuemart_order_id, $orderDetails['details']['BT']->virtuemart_paymentmethod_id,  &$this->payment_name));
@@ -152,13 +165,7 @@ class VirtuemartViewOrders extends VmView {
 
 			$emailCurrencyId = $orderDetails['details']['BT']->user_currency_id;
 			$exchangeRate = FALSE;
-			if (!class_exists ('vmPSPlugin')) {
-				require(VMPATH_PLUGINLIBS . DS . 'vmpsplugin.php');
-			}
 
-			if (!class_exists ('CurrencyDisplay')) {
-				require(VMPATH_ADMIN . DS . 'helpers' . DS . 'currencydisplay.php');
-			}
 			/*
 			 * Deprecated trigger will be renamed or removed
 			 */
@@ -186,16 +193,12 @@ class VirtuemartViewOrders extends VmView {
 				$this->orderlist = array();
 			} else {
 				$this->orderlist = $orderModel->getOrdersList($_currentUser->get('id'), TRUE);
-				if (!class_exists ('CurrencyDisplay')) {
-						require(VMPATH_ADMIN . DS . 'helpers' . DS . 'currencydisplay.php');
-				}
+
 				foreach ($this->orderlist as $k =>$order) {
 					$vendorId = 1;
 					$emailCurrencyId = $order->user_currency_id;
 					$exchangeRate = FALSE;
-					if (!class_exists ('vmPSPlugin')) {
-						require(VMPATH_PLUGINLIBS . DS . 'vmpsplugin.php');
-					}
+
 					JPluginHelper::importPlugin ('vmpayment');
 					$dispatcher = JDispatcher::getInstance ();
 					$dispatcher->trigger ('plgVmgetEmailCurrency', array($order->virtuemart_paymentmethod_id, $order->virtuemart_order_id, &$emailCurrencyId));
@@ -215,13 +218,6 @@ class VirtuemartViewOrders extends VmView {
 				$this->setLayout( strtolower( $l ) );
 			}
 
-			if($this->trackingByOrderPass == -1){
-				$ordertracking = VmConfig::get('ordertracking','guests');
-				$this->trackingByOrderPass = false; //(VmConfig::get( 'orderGuestLink', 0 ) or !VmConfig::get('oncheckout_only_registered',0)) ;
-				if($ordertracking == 'guests' or $ordertracking == 'guestlink'){
-					$this->trackingByOrderPass = true;
-				}
-			}
 		}
 
 		$orderStatusModel = VmModel::getModel('orderstatus');

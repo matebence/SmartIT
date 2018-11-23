@@ -20,13 +20,6 @@
 defined('_JEXEC') or die('Restricted access');
 vmJsApi::jDate();
 
-// if (!class_exists('vmCalculationPlugin')) require(VMPATH_PLUGINLIBS . DS . 'vmcalculationplugin.php');
-		// JPluginHelper::importPlugin('vmcalculation');
-		// $dispatcher = & JDispatcher::getInstance();
-		// $html = '';
-		// $returnValues = $dispatcher->trigger('plgVmOnDisplayEdit', array('vmcalculation' , $html));
-		// print_r( $returnValues );
-
 ?>
 <form action="index.php" method="post" name="adminForm" id="adminForm">
 
@@ -73,7 +66,6 @@ vmJsApi::jDate();
         </table></fieldset>
 		<?php
 
-		if (!class_exists('vmCalculationPlugin')) require(VMPATH_PLUGINLIBS . DS . 'vmcalculationplugin.php');
 		JPluginHelper::importPlugin('vmcalculation');
 		$dispatcher = JDispatcher::getInstance();
 		$html ='';

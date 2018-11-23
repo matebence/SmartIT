@@ -1,4 +1,6 @@
 <?php
+defined ('_JEXEC') or die();
+
 /**
  * abstract controller class containing get,store,delete,publish and pagination
  *
@@ -19,13 +21,6 @@
  *
  * http://virtuemart.net
  */
-// Load the view framework
-jimport( 'joomla.application.component.view');
-// Load default helpers
-if (!class_exists('ShopFunctions')) require(VMPATH_ADMIN.DS.'helpers'.DS.'shopfunctions.php');
-if (!class_exists('AdminUIHelper')) require(VMPATH_ADMIN.DS.'helpers'.DS.'adminui.php');
-if (!class_exists('JToolBarHelper')) require(JPATH_ADMINISTRATOR.DS.'includes'.DS.'toolbar.php');
-
 
 class VmViewAdmin extends JViewLegacy {
 	/**
@@ -59,9 +54,8 @@ class VmViewAdmin extends JViewLegacy {
 			if(JFactory::getApplication()->isSite()){
 				$unoverridable = array('category','manufacturer','user');	//This views have the same name and must not be overridable
 				if(!in_array($view,$unoverridable)){
-					if(!class_exists('VmTemplate')) require(VMPATH_SITE.DS.'helpers'.DS.'vmtemplate.php');
 					$template = VmTemplate::getDefaultTemplate();
-					$this->addTemplatePath (VMPATH_ROOT . DS. 'templates' . DS . $template['template'] . DS. 'html' . DS . 'com_virtuemart' .DS . $this->_name);
+					$this->addTemplatePath (VMPATH_ROOT .'/templates/'. $template['template'] .'/html/com_virtuemart/'. $this->_name);
 				}
 			}
 
@@ -220,8 +214,6 @@ class VmViewAdmin extends JViewLegacy {
 
 		$view = vRequest::getCmd('view', vRequest::getCmd('controller','virtuemart'));
 
-		if (!class_exists('JToolBarHelper')) require(JPATH_ADMINISTRATOR.DS.'includes'.DS.'toolbar.php');
-
 		if ($view == 'product' and vmAccess::manager('product.create')) {
 			if (vmAccess::manager('product.create')) {
 				JToolBarHelper::custom( 'createchild', 'new', 'new', vmText::_( 'COM_VIRTUEMART_PRODUCT_CHILD' ), false );
@@ -312,7 +304,7 @@ class VmViewAdmin extends JViewLegacy {
 			vmJsApi::addJScript('/administrator/components/com_virtuemart/assets/js/vmlang.js', false, true, true);
 			
 		} else {
-			$jlang = JFactory::getLanguage();
+			$jlang = vmLanguage::getLanguage();
 			$langs = $jlang->getKnownLanguages();
 			$defautName = $selectedLangue;
 			$flagImg = $selectedLangue;
@@ -350,7 +342,7 @@ class VmViewAdmin extends JViewLegacy {
 		$taskName = ' <small><small>[ ' . vmText::_('COM_VIRTUEMART_' . strtoupper($task)) . ' ]</small></small>';
 
 		JToolBarHelper::title($viewText . ' ' . $taskName . $msg, 'head vm_' . $icon . '_48');
-		$this->assignRef('viewName',$viewText); //was $viewName?
+		$this->assignRef('viewName',$viewText); //TODO was $viewName?
 		$app = JFactory::getApplication();
 		$doc = JFactory::getDocument();
 		$doc->setTitle($app->getCfg('sitename'). ' - ' .vmText::_('JADMINISTRATION').' - '.strip_tags($msg));
@@ -446,10 +438,9 @@ class VmViewAdmin extends JViewLegacy {
 			}
 			$task ="_".$task;
 		}
-		if (!class_exists( 'VmConfig' )) require(VMPATH_ADMIN .'/helpers/config.php');
-		VmConfig::loadConfig();
+
 		vmLanguage::loadJLang('com_virtuemart_help');
-		$lang = JFactory::getLanguage();
+		$lang = vmLanguage::getLanguage();
 		$key=  'COM_VIRTUEMART_HELP_'.$view.$task;
 
 		if ($lang->hasKey($key)) {

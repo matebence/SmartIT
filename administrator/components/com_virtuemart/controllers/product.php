@@ -13,14 +13,11 @@
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
- * @version $Id: product.php 9720 2018-01-09 10:21:53Z Milbo $
+ * @version $Id: product.php 9862 2018-06-07 07:20:39Z Milbo $
  */
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-
-if(!class_exists('VmController'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmcontroller.php');
-
 
 /**
  * Product Controller
@@ -38,7 +35,7 @@ class VirtuemartControllerProduct extends VmController {
 	 */
 	function __construct() {
 		parent::__construct('virtuemart_product_id');
-		$this->addViewPath( VMPATH_ADMIN . DS . 'views');
+		$this->addViewPath( VMPATH_ADMIN .'/views');
 	}
 
 
@@ -59,6 +56,7 @@ class VirtuemartControllerProduct extends VmController {
 		if($data===0)$data = vRequest::getRequest();
 
 		if(vmAccess::manager('raw')){
+			$data['product_name'] = vRequest::get('product_name','');
 			$data['product_desc'] = vRequest::get('product_desc','');
 			$data['product_s_desc'] = vRequest::get('product_s_desc','');
 			$data['customtitle'] = vRequest::get('customtitle','');
@@ -77,6 +75,7 @@ class VirtuemartControllerProduct extends VmController {
 
 		} else  {
 			if(vmAccess::manager('html')){
+				$data['product_name'] = vRequest::getHtml('product_name','');
 				$data['product_desc'] = vRequest::getHtml('product_desc','');
 				$data['product_s_desc'] = vRequest::getHtml('product_s_desc','');
 				$data['customtitle'] = vRequest::getHtml('customtitle','');
@@ -85,6 +84,7 @@ class VirtuemartControllerProduct extends VmController {
 					$data['field'] = vRequest::getHtml('field');
 				}
 			} else {
+				$data['product_name'] = vRequest::getString('product_name','');
 				$data['product_desc'] = vRequest::getString('product_desc','');
 				$data['product_s_desc'] = vRequest::getString('product_s_desc','');
 				$data['customtitle'] = vRequest::getString('customtitle','');
@@ -271,7 +271,7 @@ class VirtuemartControllerProduct extends VmController {
 			vmInfo('COM_VIRTUEMART_PRODUCT_XREF_NAMES',implode(', ',$productNames));
 		}
 
-		$this->addViewPath(VMPATH_ADMIN . DS . 'views');
+		$this->addViewPath(VMPATH_ADMIN .'/views');
 		$document = JFactory::getDocument();
 		$viewType = $document->getType();
 		$view = $this->getView($this->_cname, $viewType);

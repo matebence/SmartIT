@@ -21,8 +21,6 @@ defined('_JEXEC') or die();
 
 define('USE_SQL_CALC_FOUND_ROWS' , true);
 
-if(!class_exists('vObject')) require(VMPATH_ADMIN .'/helpers/vobject.php');
-
 class VmModel extends vObject{
 
 	/**
@@ -398,7 +396,7 @@ class VmModel extends vObject{
 			return $table;
 		}
 
-		JError::raiseError(0, vmText::sprintf('JLIB_APPLICATION_ERROR_TABLE_NAME_NOT_SUPPORTED', $name));
+		vmError(vmText::sprintf('JLIB_APPLICATION_ERROR_TABLE_NAME_NOT_SUPPORTED', $name),vmText::sprintf('JLIB_APPLICATION_ERROR_TABLE_NAME_NOT_SUPPORTED', $name));
 
 		return null;
 	}
@@ -723,7 +721,6 @@ class VmModel extends vObject{
 	 */
 	public function getPagination($perRow = 5) {
 
-		if(!class_exists('VmPagination')) require(VMPATH_ADMIN .'/helpers/vmpagination.php');
 		if(empty($this->_limit) ){
 			$this->setPaginationLimits();
 		}
@@ -840,9 +837,9 @@ class VmModel extends vObject{
 		}
 
 		if($this->_withCount){
-			$q = 'SELECT SQL_CALC_FOUND_ROWS '.$select.$joinedTables;
+			$q = 'SELECT SQL_CALC_FOUND_ROWS '.$select.' '.$joinedTables;
 		} else {
-			$q = 'SELECT '.$select.$joinedTables;
+			$q = 'SELECT '.$select.' '.$joinedTables;
 		}
 
 		if($this->_noLimit or empty($limit)){
@@ -1032,7 +1029,6 @@ class VmModel extends vObject{
 
 			//just an idea
 			if(isset($this->_cache[$this->_id]->virtuemart_vendor_id) && empty($this->_data->virtuemart_vendor_id)){
-				if(!class_exists('VirtueMartModelVendor')) require(VMPATH_ADMIN .'/models/vendor.php');
 				$this->_cache[$this->_id]->virtuemart_vendor_id = VirtueMartModelVendor::getLoggedVendor();
 			}
 		}

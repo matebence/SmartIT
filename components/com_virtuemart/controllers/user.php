@@ -13,7 +13,7 @@
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
- * @version $Id: user.php 9623 2017-08-15 12:15:33Z Milbo $
+ * @version $Id: user.php 9831 2018-05-07 13:45:33Z Milbo $
  */
 
 // Check to ensure this file is included in Joomla!
@@ -53,7 +53,6 @@ class VirtueMartControllerUser extends JControllerLegacy
 		$view = $this->getView($viewName, $viewType, '', array('layout' => $viewLayout));
 		$view->assignRef('document', $document);
 
-		if (!class_exists('VirtueMartCart')) require(VMPATH_SITE . DS . 'helpers' . DS . 'cart.php');
 		$cart = VirtueMartCart::getCart();
 		$cart->_fromCart = false;
 		$cart->setCartIntoSession();
@@ -68,7 +67,6 @@ class VirtueMartControllerUser extends JControllerLegacy
 		$view = $this->getView('user', 'html');
 		$view->setLayout('edit_address');
 
-		if (!class_exists('VirtueMartCart')) require(VMPATH_SITE . DS . 'helpers' . DS . 'cart.php');
 		$cart = VirtueMartCart::getCart();
 		$cart->_fromCart = true;
 
@@ -77,8 +75,6 @@ class VirtueMartControllerUser extends JControllerLegacy
 			$sess = JFactory::getSession();
 			$vmAdminId = $sess->get('vmAdminID','');
 			if(!empty($vmAdminId)){
-				if(!class_exists('vmCrypt'))
-					require(VMPATH_ADMIN.DS.'helpers'.DS.'vmcrypt.php');
 				$adminId = vmCrypt::decrypt($vmAdminId);
 				vmdebug('Shoppergroup switcher activ',$vmAdminId,$adminId);
 				if($adminId){
@@ -115,7 +111,6 @@ class VirtueMartControllerUser extends JControllerLegacy
 	 */
 	function saveUser(){
 
-		if (!class_exists('VirtueMartCart')) require(VMPATH_SITE . DS . 'helpers' . DS . 'cart.php');
 		$cart = VirtueMartCart::getCart();
 
 		$layout = vRequest::getCmd('layout','edit');
@@ -176,7 +171,7 @@ class VirtueMartControllerUser extends JControllerLegacy
 
 		if($cartObj){
 			if($cartObj->_fromCart or $cartObj->getInCheckOut()){
-				if(!class_exists('VirtueMartCart')) require(VMPATH_SITE.DS.'helpers'.DS.'cart.php');
+
 				$cart = VirtueMartCart::getCart();
 				$prefix= '';
 				if ($data['address_type'] == 'STaddress' || $data['address_type'] =='ST') {
@@ -236,7 +231,6 @@ class VirtueMartControllerUser extends JControllerLegacy
 					$switch = true;
 				}
 
-				if(!class_exists('VirtueMartCart')) require(VMPATH_SITE.DS.'helpers'.DS.'cart.php');
 				$cart = VirtueMartCart::getCart();
 				if(!empty($cart->vendorId) and $cart->vendorId!=1){
 					$data['vendorId'] = $cart->vendorId;
@@ -293,7 +287,7 @@ class VirtueMartControllerUser extends JControllerLegacy
 	 */
 	function cancel()
 	{
-		if(!class_exists('VirtueMartCart')) require(VMPATH_SITE.DS.'helpers'.DS.'cart.php');
+
 		$cart = VirtueMartCart::getCart();
 		if($cart->_fromCart){
 			$cart->setOutOfCheckout();
@@ -335,7 +329,7 @@ class VirtueMartControllerUser extends JControllerLegacy
 			if(!$res[0]){
 				$data = vRequest::getPost();
 				$data['address_type'] = vRequest::getVar('addrtype','BT');
-				if(!class_exists('VirtueMartCart')) require(VMPATH_SITE.DS.'helpers'.DS.'cart.php');
+
 				$cart = VirtueMartCart::getCart();
 				$prefix= '';
 				if ($data['address_type'] == 'STaddress' || $data['address_type'] =='ST') {

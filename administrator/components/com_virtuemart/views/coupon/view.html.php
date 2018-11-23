@@ -14,14 +14,11 @@
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
-* @version $Id: view.html.php 9802 2018-03-20 15:22:11Z Milbo $
+* @version $Id: view.html.php 9843 2018-05-18 22:39:36Z Milbo $
 */
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-
-// Load the view framework
-if(!class_exists('VmViewAdmin'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmin.php');
 
 /**
  * HTML View class for maintaining the list of Coupons
@@ -38,15 +35,7 @@ class VirtuemartViewCoupon extends VmViewAdmin {
 	function display($tpl = null) {
 
 		// Load the helper(s)
-
-
-		if (!class_exists('VmHTML'))
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'html.php');
-
 		$model = VmModel::getModel();
-
-
-
 
 		$layoutName = vRequest::getCmd('layout', 'default');
 
@@ -110,7 +99,7 @@ class VirtuemartViewCoupon extends VmViewAdmin {
 
 			$this->pagination = $model->getPagination();
 			if($this->showVendors()){
-				$this->vendorlist = Shopfunctions::renderVendorList($model->virtuemart_vendor_id);
+				$this->vendorlist = Shopfunctions::renderVendorList($model->virtuemart_vendor_id, 'virtuemart_vendor_id', true);
 			}
 		}
 

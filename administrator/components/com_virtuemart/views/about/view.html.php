@@ -19,9 +19,6 @@
 // Check to ensure this file is included in Joomla!
 defined( '_JEXEC' ) or die('Restricted access');
 
-// Load the view framework
-if(!class_exists( 'VmViewAdmin' )) require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmin.php');
-
 /**
  * HTML View class for the VirtueMart Component
  *

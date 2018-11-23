@@ -13,14 +13,11 @@
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
- * @version $Id: orders.php 9796 2018-03-14 12:36:18Z Milbo $
+ * @version $Id: orders.php 9831 2018-05-07 13:45:33Z Milbo $
  */
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-
-if(!class_exists('VmController'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmcontroller.php');
-
 
 /**
  * Orders Controller
@@ -47,7 +44,6 @@ class VirtuemartControllerOrders extends VmController {
 	 */
 	public function callInvoiceView(){
 
-		if(!class_exists( 'VirtueMartControllerInvoice' )) require(VMPATH_SITE.DS.'controllers'.DS.'invoice.php');
 		$controller = new VirtueMartControllerInvoice();
 		$controller->display();
 

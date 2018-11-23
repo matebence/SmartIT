@@ -15,7 +15,7 @@ defined('JPATH_PLATFORM') or die;
  * other free or open source software licenses.
  * @version $Id: $
  */
-defined('DS') or define('DS', DIRECTORY_SEPARATOR);
+
 if (!class_exists( 'VmConfig' )) require(JPATH_ROOT .'/administrator/components/com_virtuemart/helpers/config.php');
 /*
  * This class is used by VirtueMart Payment or Shipment Plugins
@@ -38,7 +38,6 @@ class JFormFieldVmCurrencies extends JFormFieldList {
 	protected function getOptions() {
 		$options = array();
 
-		if (!class_exists('VirtueMartModelVendor')) require(VMPATH_ADMIN . DS . 'models' . DS . 'vendor.php');
 		$vendor_id = VirtueMartModelVendor::getLoggedVendor();
 		// set currency_id to logged vendor
 		if (empty($this->value)) {

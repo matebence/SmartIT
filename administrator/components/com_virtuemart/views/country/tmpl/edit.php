@@ -13,7 +13,7 @@
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
-* @version $Id: edit.php 9413 2017-01-04 17:20:58Z Milbo $
+* @version $Id: edit.php 9851 2018-05-30 07:41:14Z Milbo $
 */
 
 // Check to ensure this file is included in Joomla!
@@ -31,7 +31,7 @@ AdminUIHelper::imitateTabs('start','COM_VIRTUEMART_COUNTRY_DETAILS');
 	<legend><?php echo vmText::_('COM_VIRTUEMART_COUNTRY_DETAILS'); ?></legend>
 	<table class="admintable">
 		<?php
-		$lang = JFactory::getLanguage();
+		$lang = vmLanguage::getLanguage();
 		$prefix="COM_VIRTUEMART_COUNTRY_";
 		$country_string = $lang->hasKey($prefix.$this->country->country_3_code) ? ' (' . vmText::_($prefix.$this->country->country_3_code) . ')' : ' ';
         ?>

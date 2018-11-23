@@ -13,13 +13,11 @@
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
-* @version $Id: order_histories.php 9754 2018-02-01 10:40:16Z Milbo $
+* @version $Id: order_histories.php 9831 2018-05-07 13:45:33Z Milbo $
 */
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-
-if(!class_exists('VmTable'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmtable.php');
 
 /**
  * Order history table class
@@ -43,6 +41,8 @@ class TableOrder_histories extends VmTable {
 	var $comments = NULL;
 	var $o_hash = NULL;
 
+
+
 	/**
 	 * @param $db Class constructor; connect to the database
 	 */
@@ -54,5 +54,16 @@ class TableOrder_histories extends VmTable {
 		$this->setOmittedHashFields(array('virtuemart_order_history_id'));
 		$this->setLoggable();
 	}
+
+	/*function check(){
+
+		if(empty($this->order_status_code) and !empty($this->order_status)){
+			$this->order_status_code = $this->order_status;
+		}
+		if(empty($this->order_status) and !empty($this->order_status_code)){
+			$this->order_status = $this->order_status_code;
+		}
+		return parent::check();
+	}*/
 }
 // pure php no closing tag

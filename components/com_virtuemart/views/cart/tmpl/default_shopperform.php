@@ -33,9 +33,6 @@ defined('_JEXEC') or die('Restricted access');
 			<td style="border:0px; width: 5%;"></td>
 			<td style="border:0px;">
 				<?php 
-				if (!class_exists ('VirtueMartModelUser')) {
-					require(VMPATH_ADMIN . DS . 'models' . DS . 'user.php');
-				}
 
 				$currentUser = $this->cart->user->virtuemart_user_id;
 				echo JHtml::_('Select.genericlist', $this->userList, 'userID', 'class="vm-chzn-select" style="width: 200px"', 'id', 'displayedName', $currentUser,'userIDcart');

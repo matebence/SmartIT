@@ -40,7 +40,7 @@ if ($this->show and $user->id == 0  ) {
 
 	//Extra login stuff, systems like openId and plugins HERE
     if (JPluginHelper::isEnabled('authentication', 'openid')) {
-        $lang = JFactory::getLanguage();
+        $lang = vmLanguage::getLanguage();
         $lang->load('plg_authentication_openid', JPATH_ADMINISTRATOR);
         $langScript = '
 //<![CDATA[

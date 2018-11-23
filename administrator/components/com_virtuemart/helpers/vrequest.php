@@ -78,7 +78,7 @@ class vRequest {
 
 		$unicodeslugs = VmConfig::get('transliteratePaths',false);
 		if($unicodeslugs){
-			$lang = JFactory::getLanguage();
+			$lang = vmLanguage::getLanguage();
 			$str = $lang->transliterate($str);
 		}
 
@@ -310,6 +310,10 @@ class vRequest {
 		return $c;
 	}
 
+	public static function vmHtmlEntities($str){
+		return htmlentities($str, ENT_COMPAT, "UTF-8", false);
+	}
+
 	/**
 	 * Checks for a form token in the request.
 	 *
@@ -362,8 +366,6 @@ class vRequest {
 		$user = JFactory::getUser();
 
 		if(empty($user->id)) $user->id = 0;
-		if(!class_exists('vmCrypt'))
-			require(VMPATH_ADMIN.DS.'helpers'.DS.'vmcrypt.php');
 
 		$token = $sess->get('session.token');
 		if ($token === null || $fNew) {

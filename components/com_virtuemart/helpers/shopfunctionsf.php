@@ -14,7 +14,7 @@
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
- * @version $Id: shopfunctionsf.php 9736 2018-01-23 23:32:12Z Milbo $
+ * @version $Id: shopfunctionsf.php 9950 2018-10-01 11:54:35Z Milbo $
  */
 
 // Check to ensure this file is included in Joomla!
@@ -33,10 +33,8 @@ class shopFunctionsF {
 		}
 		if($show == 1) {
 			//This is deprecated and will be replaced by the commented lines below (vmView instead of VirtuemartViewUser)
-			if(!class_exists( 'VirtuemartViewUser' )) require(VMPATH_SITE.DS.'views'.DS.'user'.DS.'view.html.php');
-			$view = new VirtuemartViewUser();
-			//if(!class_exists( 'vmView' )) require(VMPATH_SITE.DS.'helpers'.DS.'vmview.php');
-			//$view = new vmView();
+			//$view = new VirtuemartViewUser();
+			$view = new vmView();
 			$body = $view->renderVmSubLayout($layout,array('show' => $show, 'order' => $order, 'from_cart' => $cart, 'url' => $url));
 		}
 
@@ -94,7 +92,7 @@ class shopFunctionsF {
 	 */
 	static function renderFormField($type){
 		//Get custom field
-		JFormHelper::addFieldPath(VMPATH_ADMIN . DS . 'fields');
+		JFormHelper::addFieldPath(VMPATH_ADMIN .'/fields');
 		$types = JFormHelper::loadFieldType($type, false);
 		return $types->getOptions();
 	}
@@ -151,15 +149,14 @@ class shopFunctionsF {
 		$idTag = $_prefix.$idTag;
 		$attrs['class'] = 'virtuemart_country_id';
 		$attrs['class'] = 'vm-chzn-select';
+
 		// Load helpers and  languages files
-		if (!class_exists( 'VmConfig' )) require(JPATH_COMPONENT_ADMINISTRATOR .'/helpers/config.php');
-		VmConfig::loadConfig();
 		vmLanguage::loadJLang('com_virtuemart_countries');
 		vmJsApi::jQuery();
 		vmJsApi::chosenDropDowns();
 
 		$sorted_countries = array();
-		$lang = JFactory::getLanguage();
+		$lang = vmLanguage::getLanguage();
 		$prefix="COM_VIRTUEMART_COUNTRY_";
 		foreach ($countries as  $country) {
 			$country_string = $lang->hasKey($prefix.$country->country_3_code) ?   vmText::_($prefix.$country->country_3_code)  : $country->country_name;
@@ -363,9 +360,7 @@ class shopFunctionsF {
 
 		if(!$products) return;
 		$customfieldsModel = VmModel::getModel ('Customfields');
-		if (!class_exists ('vmCustomPlugin')) {
-			require(VMPATH_PLUGINLIBS . DS . 'vmcustomplugin.php');
-		}
+
 		foreach($products as $i => $productItem){
 
 			if (!empty($productItem->customfields)) {
@@ -487,8 +482,6 @@ class shopFunctionsF {
 	 */
 	static public function renderVmSubLayout($name,$viewData=0){
 
-		if (!class_exists ('VmView'))
-			require(VMPATH_SITE . DS . 'helpers' . DS . 'vmview.php');
 		$lPath = VmView::getVmSubLayoutPath ($name);
 
 		if($lPath){
@@ -501,6 +494,181 @@ class shopFunctionsF {
 
 	}
 
+    /**
+     * renders sub layout in a bootstrap grid layout
+     *
+     * @param     $name
+     * @param int $viewData
+     *
+     * @since 3.8
+     * @author Eugen Stranz
+     */
+    static public function renderVmSubLayoutAsGrid ($name, $viewData = 0)
+    {
+        // get the content of the first index in the array and save it in a variable
+        // this variable will be used in the for each loop to generate the grid
+        // we then delete the first index as there is no point in passing it twice
+        reset($viewData);
+        $itemCollection = $viewData[key($viewData)];
+        unset($viewData[key($viewData)]);
+
+        if(!isset($viewData['options']))
+        {
+            $viewData['options'] = array ();
+        }
+
+        // Grid Settings & Calculation
+        $itemsPerRow              = vRequest::get(
+            'items_per_row',
+            array ( 'xs' => 1, 'sm' => 2, 'md' => 3, 'lg' => 3, 'xl' => 3 ),
+            FILTER_UNSAFE_RAW,
+            FILTER_FLAG_NO_ENCODE,
+            $viewData['options']
+        );
+        $iRowItemsPerDevice       = array ( 'xs' => 0, 'sm' => 0, 'md' => 0, 'lg' => 0, 'xl' => 0 );
+        $totalItems               = count($itemCollection);
+        $iItems                   = 0;
+        $gridClassNamesForNewLine = array (
+            'xs' => 'col-12 d-block d-sm-none',
+            'sm' => 'col-12 d-none d-sm-block d-md-none d-lg-none d-xl-none',
+            'md' => 'col-12 d-none d-sm-none d-md-block d-lg-none d-xl-none',
+            'lg' => 'col-12 d-none d-sm-none d-md-none d-lg-block d-xl-none',
+            'xl' => 'col-12 d-none d-sm-none d-md-none d-lg-none d-xl-block',
+        );
+        $fixedColumnWidth         = vRequest::get(
+            'fixed_column_width',
+            false,
+            FILTER_UNSAFE_RAW,
+            FILTER_FLAG_NO_ENCODE,
+            $viewData['options']
+        );
+        if ($fixedColumnWidth)
+        {
+            $columnClassNames         = array ();
+            $possibleGridColumnWitdhs = array ( 1, 2, 3, 4, 6 );
+            foreach ($itemsPerRow as $deviceSize => $itemPerRow)
+            {
+                if (in_array($itemPerRow, $possibleGridColumnWitdhs))
+                {
+                    $columnClassNames[] = ($deviceSize == 'xs')
+                        ? 'col-' . (12 / $itemPerRow)
+                        : 'col-' . $deviceSize . '-' . (12 / $itemPerRow);
+                }
+                else
+                {
+                    $columnClassNames[]       = ($deviceSize == 'xs')
+                        ? 'col-4'
+                        : 'col-' . $deviceSize . '-4';
+                    $itemsPerRow[$deviceSize] = 3;
+                }
+            }
+            $columnClassNames[] = 'd-flex';
+        }
+        else
+        {
+            // $columnClassNames = array ( 'col', 'd-flex' );
+            $columnClassNames = array ( 'col' );
+        }
+
+        // Display Settings
+        $showHorizontalLine      = vRequest::get(
+            'show_horizontal_line',
+            true,
+            FILTER_UNSAFE_RAW,
+            FILTER_FLAG_NO_ENCODE,
+            $viewData['options']
+        );
+        $showVerticalLine        = vRequest::get(
+            'show_vertical_line',
+            true,
+            FILTER_UNSAFE_RAW,
+            FILTER_FLAG_NO_ENCODE,
+            $viewData['options']
+        );
+        $addMarginBottomToColumn = vRequest::get(
+            'add_margin_bottom_to_column',
+            false,
+            FILTER_UNSAFE_RAW,
+            FILTER_FLAG_NO_ENCODE,
+            $viewData['options']
+        );
+        if (!$showHorizontalLine)
+        {
+            $addMarginBottomToColumn = true;
+        }
+        else
+        {
+            $addMarginBottomToColumn = false;
+        }
+
+        // Output The Items
+        ob_start();
+        ?>
+        <div class="row">
+            <?php
+            // Loop Through The Items Of The Collection
+            foreach ($itemCollection as $item)
+            {
+                // Vertical Line Logic
+                $newLineClassName = array ();
+                if ($showVerticalLine)
+                {
+                    foreach ($iRowItemsPerDevice as $deviceSize => $iRowItem)
+                    {
+                        if (($iRowItemsPerDevice[$deviceSize] + 1) == $itemsPerRow[$deviceSize])
+                        {
+                            $newLineClassName[] = ' end-' . $deviceSize;
+                        }
+                        else
+                        {
+                            $newLineClassName[] = ' vl-' . $deviceSize;
+                        }
+                    }
+                }
+                ?>
+                <div class="<?php echo implode(' ', $columnClassNames) . implode('', $newLineClassName) ?>">
+                    <?php
+                    $viewData[$name] = $item;
+                    echo self::renderVmSubLayout($name, $viewData);
+                    ?>
+                </div>
+                <?php
+                $iItems++;
+
+                // Logic For New Line Force
+                foreach ($iRowItemsPerDevice as $deviceSize => $iRowItem)
+                {
+                    $iRowItemsPerDevice[$deviceSize]++;
+                    if ($iRowItemsPerDevice[$deviceSize] == $itemsPerRow[$deviceSize]
+                        && $iItems < $totalItems)
+                    {
+                        // Add Margin Bottom If We Horizontal Line is Disabled
+                        if ($addMarginBottomToColumn)
+                        {
+                            $gridClassNamesForNewLine[$deviceSize] .= ($deviceSize == 'xs')
+                                ? ' mb-4'
+                                : ' mb-' . $deviceSize . '-4';
+                        }
+                        ?>
+                        <div class="new-line <?php echo $gridClassNamesForNewLine[$deviceSize] ?>">
+                            <?php if ($showHorizontalLine): ?>
+                                <hr>
+                            <?php endif ?>
+                        </div>
+                        <?php
+                        $iRowItemsPerDevice[$deviceSize] = 0;
+                    }
+                }
+            }
+            ?>
+        </div>
+        <?php
+        // Return Content And Clear Memory
+        $content = ob_get_contents();
+        ob_end_clean();
+
+        return $content;
+    }
 
 
 	/**
@@ -534,28 +702,27 @@ class shopFunctionsF {
 	}
 
 	public static function prepareViewForMail($viewName, $vars, $controllerName = false) {
-		if(!class_exists( 'VirtueMartControllerVirtuemart' )) require(VMPATH_SITE.DS.'controllers'.DS.'virtuemart.php');
 
-		$controller = new VirtueMartControllerVirtuemart();
-		// refering to http://forum.virtuemart.net/index.php?topic=96318.msg317277#msg317277
-		$controller->addViewPath( VMPATH_SITE.DS.'views' );
-
-		$view = $controller->getView( $viewName, 'html' );
 		if(!$controllerName) $controllerName = $viewName;
 		$controllerClassName = 'VirtueMartController'.ucfirst( $controllerName );
-		if(!class_exists( $controllerClassName )) require(VMPATH_SITE.DS.'controllers'.DS.$controllerName.'.php');
+		if(!class_exists( $controllerClassName )) require(VMPATH_SITE .'/controllers/'.$controllerName.'.php');
+		$controller = new $controllerClassName();
+		//$controller = new VirtueMartControllerVirtuemart();
+		// refering to http://forum.virtuemart.net/index.php?topic=96318.msg317277#msg317277
+		$controller->addViewPath( VMPATH_SITE .'/views' );
+
+		$view = $controller->getView( $viewName, 'html' );
 
 		//refering to http://forum.virtuemart.net/index.php?topic=96318.msg317277#msg317277
 		$view->addTemplatePath( VMPATH_SITE.'/views/'.$viewName.'/tmpl' );
 
-		if(!class_exists('VmTemplate')) require(VMPATH_SITE.DS.'helpers'.DS.'vmtemplate.php');
 		$template = VmTemplate::loadVmTemplateStyle();
 		VmTemplate::setTemplate($template);
 		if($template){
 			if(is_array($template) and isset($template['template'])){
-				$view->addTemplatePath( VMPATH_ROOT.DS.'templates'.DS.$template['template'].DS.'html'.DS.'com_virtuemart'.DS.$viewName );
+				$view->addTemplatePath( VMPATH_ROOT .'/templates/'.$template['template'].'/html/com_virtuemart/'.$viewName );
 			} else {
-				$view->addTemplatePath( VMPATH_ROOT.DS.'templates'.DS.$template.DS.'html'.DS.'com_virtuemart'.DS.$viewName );
+				$view->addTemplatePath( VMPATH_ROOT .'/templates/'.$template.'/html/com_virtuemart/'.$viewName );
 			}
 		}
 
@@ -574,7 +741,6 @@ class shopFunctionsF {
 
 		static $res = null;
 		if($res!==null) return $res;
-		if(!class_exists('VmTemplate')) require(VMPATH_SITE.DS.'helpers'.DS.'vmtemplate.php');
 		$res = VmTemplate::loadVmTemplateStyle();
 
 	}
@@ -587,7 +753,6 @@ class shopFunctionsF {
 	 */
 	static function setVmTemplate ($view, $catTpl = 0, $prodTpl = 0, $catLayout = 0, $prodLayout = 0) {
 
-		if(!class_exists('VmTemplate')) require(VMPATH_SITE.DS.'helpers'.DS.'vmtemplate.php');
 		return VmTemplate::setVmTemplate($view, $catTpl, $prodTpl, $catLayout, $prodLayout);
 	}
 
@@ -644,12 +809,12 @@ class shopFunctionsF {
 				$replyTo[0] = $view->orderDetails['details']['BT']->email;
 				$replyToName[0] = $view->orderDetails['details']['BT']->first_name . ' ' . $view->orderDetails['details']['BT']->last_name;
 			} else {
-				if(isset($view->user->email) && $view->user->name) {
-					$replyTo[0] = $view->user->email;
-					$replyToName[0] = $view->user->name;
+				if(is_object($view->user)){
+					$replyTo[0] = isset($view->user->email)? $view->user->email:false;
+					$replyToName[0] = isset($view->user->name)? $view->user->name:false;
 				} else {
-					$replyTo[0] = $view->user['email'];
-					$replyToName[0] = $view->user['name'];
+					$replyTo[0] = isset($view->user['email'])? $view->user['email']:false;
+					$replyToName[0] = isset($view->user['name'])? $view->user['name']:false;
 				}
 			}
 		}
@@ -666,6 +831,7 @@ class shopFunctionsF {
 			foreach( (array)$view->mediaToSend as $media ) {
 				$mailer->addAttachment( $media );
 			}
+			$view->mediaToSend = array();
 		}
 
 		// set proper sender
@@ -696,6 +862,7 @@ class shopFunctionsF {
 				$recipient = array($recipient);
 			}
 			if (VmConfig::showDebug()) {
+				if(!isset($view->mediaToSend)) $view->mediaToSend = array();
 				vmdebug('Debug mail active, no mail sent. The mail to send subject ' . $subject . ' to "' . implode(' ', $recipient) . '" from ' . $sender[0] . ' ' . $sender[1] . ' ' . vmText::$language->getTag() . '<br>' . $body,$view->mediaToSend);
 			} else {
 				vmInfo('Debug mail active, no mail sent. The mail to send subject ' . $subject . ' to "' . implode(' ', $recipient) . '" from ' . $sender[0] . ' ' . $sender[1] . '<br>' . $body);

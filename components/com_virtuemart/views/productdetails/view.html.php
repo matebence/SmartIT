@@ -14,14 +14,10 @@
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
- * @version $Id: view.html.php 9761 2018-02-14 21:57:18Z Milbo $
+ * @version $Id: view.html.php 9949 2018-10-01 11:42:43Z Milbo $
  */
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-
-// Load the view framework
-if (!class_exists('VmView'))
-    require(VMPATH_SITE . DS . 'helpers' . DS . 'vmview.php');
 
 /**
  * Product details
@@ -56,9 +52,6 @@ class VirtueMartViewProductdetails extends VmView {
 			$pathway = $app->getPathway();
 			$task = vRequest::getCmd('task');
 
-			if (!class_exists('VmImage'))
-				require(VMPATH_ADMIN . DS . 'helpers' . DS . 'image.php');
-
 			// Load the product
 			//$product = $this->get('product');	//Why it is sensefull to use this construction? Imho it makes it just harder
 			$product_model = VmModel::getModel('product');
@@ -81,16 +74,11 @@ class VirtueMartViewProductdetails extends VmView {
 			$product = $product_model->getProduct($virtuemart_product_id,TRUE,TRUE,TRUE,$quantity);
 			$this->assignRef('product', $product);
 
-			if(!class_exists('shopFunctionsF'))require(VMPATH_SITE.DS.'helpers'.DS.'shopfunctionsf.php');
 			$last_category_id = shopFunctionsF::getLastVisitedCategoryId();
 
 			$customfieldsModel = VmModel::getModel ('Customfields');
 
 			if ($product->customfields){
-
-				if (!class_exists ('vmCustomPlugin')) {
-					require(VMPATH_PLUGINLIBS . DS . 'vmcustomplugin.php');
-				}
 				$customfieldsModel -> displayProductCustomfieldFE ($product, $product->customfields);
 			}
 
@@ -101,16 +89,31 @@ class VirtueMartViewProductdetails extends VmView {
 
 				$categoryLink = '';
 				if (!$last_category_id) {
-					$last_category_id = vRequest::getInt('virtuemart_category_id', false);
+					$last_category_id = vRequest::getInt('virtuemart_category_id', 0);
 				}
 				if ($last_category_id) {
 					$categoryLink = '&virtuemart_category_id=' . $last_category_id;
 				}
 
 				if (VmConfig::get('handle_404',1)) {
-					$app->redirect(JRoute::_('index.php?option=com_virtuemart&view=category' . $categoryLink . '&error=404', FALSE));
+					header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+
+					$cat = VmModel::getModel('category')->getCategory($last_category_id);
+					if(empty($cat->virtuemart_category_id)){
+						$last_category_id = 0;
+					}
+					vRequest::setVar('virtuemart_category_id', $last_category_id);
+
+					//Todo we could here also get the home menu item and display that one.
+					$document = JFactory::getDocument();
+					JLoader::register('VirtueMartControllerCategory',VMPATH_SITE .'/controllers/category.php');
+					$controller = new VirtuemartControllerCategory();
+					$view = $controller->getView('category', 'html', '', array('layout' => 'default'));
+					$view->assignRef('document', $document);
+					$view->display();
+
 				} else {
-					JError::raise(E_ERROR,'404','Not found');
+					throw new RuntimeException('VirtueMart product not found.', 404);
 				}
 
 				return;
@@ -193,7 +196,7 @@ class VirtueMartViewProductdetails extends VmView {
 			if ($category_model) {
 
 				$category = $category_model->getCategory($product->virtuemart_category_id, $this->cat_productdetails);
-				//if($category->parents===false) $category->parents = $category_model->getParentsList($product->virtuemart_category_id);
+				if($category->parents===null) $category->parents = $category_model->getParentsList($product->virtuemart_category_id);
 				if(in_array($last_category_id,$product->categories) && !$seo_full) $product->category_name = $category->category_name;
 
 				$category_model->addImages($category, 1);
@@ -330,8 +333,6 @@ class VirtueMartViewProductdetails extends VmView {
 			$productDisplayShipments = array();
 			$productDisplayPayments = array();
 
-			if (!class_exists('vmPSPlugin'))
-				require(VMPATH_PLUGINLIBS . DS . 'vmpsplugin.php');
 			JPluginHelper::importPlugin('vmcalculation');
 			JPluginHelper::importPlugin('vmshipment');
 			JPluginHelper::importPlugin('vmpayment');
@@ -400,10 +401,6 @@ class VirtueMartViewProductdetails extends VmView {
 				vmJsApi::jDynUpdate();
 			}
 
-			if ($this->show_prices) {
-				if (!class_exists('calculationHelper'))
-					require(VMPATH_ADMIN . DS . 'helpers' . DS . 'calculationh.php');
-			}
 			vmJsApi::jPrice();
 
 			parent::display($tpl);

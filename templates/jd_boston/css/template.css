@@ -2603,6 +2603,7 @@ article.item {
 #sp-bottom .sp-module .sp-module-title {
   text-transform: none;
   font-weight: 400;
+  font-size: 24px;
 }
 #sp-footer {
   color: #fff;

@@ -79,13 +79,10 @@ abstract class vmPlugin extends JPlugin {
 
 		$this->_tablename = '#__virtuemart_' . $this->_psType . '_plg_' . $this->_name;
 		$this->_tableChecked = FALSE;
-		$this->_xmlFile	= vRequest::filterPath( VMPATH_ROOT .DS. 'plugins' .DS. $this->_type .DS.  $this->_name . DS. $this->_name . '.xml');
-
-		// Load the helper functions that are needed by all plugins
-		if (!class_exists ('ShopFunctions')) {
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'shopfunctions.php');
+		$this->_xmlFile	= vRequest::filterPath( VMPATH_ROOT .'/plugins/' . $this->_type .'/'.  $this->_name .'/'. $this->_name . '.xml');
+		if(!JFile::exists($this->_xmlFile)){
+			$this->_xmlFile	= vRequest::filterPath( JPATH_ROOT .'/plugins/' . $this->_type .'/'.  $this->_name .'/'. $this->_name . '.xml');
 		}
-
 	}
 
 	public function setConvertDecimal($toConvert) {
@@ -113,7 +110,7 @@ abstract class vmPlugin extends JPlugin {
 
 	static public function loadJLang($fname,$type,$name){
 
-		//$jlang = JFactory::getLanguage();
+		//$jlang = vmLanguage::getLanguage();
 		//$tag = $jlang->getTag();
 		//if(empty($tag)) {
 			$tag = vmLanguage::$currLangTag;
@@ -125,10 +122,10 @@ abstract class vmPlugin extends JPlugin {
 
 		vmLanguage::getLanguage($tag);
 
-		$path = $basePath = VMPATH_ROOT .DS. 'plugins' .DS.$type.DS.$name;
+		$path = $basePath = VMPATH_ROOT .'/plugins/' .$type.'/'.$name;
 
 		if(VmConfig::get('enableEnglish', true) and $tag!='en-GB'){
-			$testpath = $basePath.DS.'language'.DS.'en-GB'.DS.'en-GB.'.$fname.'.ini';
+			$testpath = $basePath .'/language/en-GB/en-GB.'.$fname.'.ini';
 			if(!file_exists($testpath)){
 				$epath = VMPATH_ADMINISTRATOR;
 			} else {
@@ -137,7 +134,7 @@ abstract class vmPlugin extends JPlugin {
 			vmLanguage::$languages[$tag]->load($fname, $epath, 'en-GB', true, false);
 		}
 
-		$testpath = $basePath.DS.'language'.DS.$tag.DS.$tag.'.'.$fname.'.ini';
+		$testpath = $basePath .'/language/'.$tag.'/'.$tag.'.'.$fname.'.ini';
 		if(!file_exists($testpath)){
 			$path = VMPATH_ADMINISTRATOR;
 		}
@@ -391,8 +388,6 @@ abstract class vmPlugin extends JPlugin {
 			if ($result) {
 				$update[$this->_tablename] = array($tablesFields, array(), array());
 				vmdebug(get_class($this) . ':: VirtueMart update ' . $this->_tablename);
-				if (!class_exists('GenericTableUpdater'))
-					require(VMPATH_ADMIN . DS . 'helpers' . DS . 'tableupdater.php');
 				$updater = new GenericTableUpdater();
 				$updater->updateMyVmTables($update);
 			} else {
@@ -473,7 +468,7 @@ abstract class vmPlugin extends JPlugin {
 	 */
 	function setConfigParameterable ($paramsFieldName, $varsToPushParam) {
 		$this->_xParams = $paramsFieldName;
-		$this->_varsToPushParam = $varsToPushParam;
+		$this->_varsToPushParam = array_merge($this->_varsToPushParam, $varsToPushParam);
 	}
 
 	/**
@@ -541,12 +536,7 @@ abstract class vmPlugin extends JPlugin {
 
 		}
 
-		if (!class_exists ('VmTable')) {
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'vmtable.php');
-		}
-
 		//New Vm3 way
-
 		//Is only used for the config tables!
 		//VmTable::bindParameterable ($data, $data->_xParams, $this->_varsToPushParam);
 		if(isset($this->_varsToPushParam)){
@@ -576,7 +566,7 @@ abstract class vmPlugin extends JPlugin {
 			$db = JFactory::getDBO ();
 
 			if (!class_exists ($this->_configTableClassName)) {
-				require(VMPATH_ADMIN . DS . 'tables' . DS . $this->_configTableFileName . '.php');
+				require(VMPATH_ADMIN .'/tables/'. $this->_configTableFileName . '.php');
 			}
 			$this->_vmpCtable = new $this->_configTableClassName($db);
 			if ($this->_xParams !== 0) {
@@ -645,9 +635,6 @@ abstract class vmPlugin extends JPlugin {
 	 */
 	protected function createPluginTableObject ($tableName, $tableFields, $primaryKey, $tableId, $loggable = FALSE) {
 
-		if (!class_exists ('VmTableData')) {
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'vmtabledata.php');
-		}
 		$db = JFactory::getDBO ();
 		$table = new VmTableData($tableName, $tableId, $db);
 		foreach ($tableFields as $field) {
@@ -725,16 +712,15 @@ abstract class vmPlugin extends JPlugin {
 	 * @author Max Milbers, Valérie Isaksen
 	 */
 
-	private function _getLayoutPath ($pluginName, $group, $layout = 'default') {
+	static public function _getLayoutPath ($pluginName, $group, $layout = 'default') {
 		$layoutPath=$templatePathWithGroup=$defaultPathWithGroup='';
 		jimport ('joomla.filesystem.file');
 		// First search in the new system
-		if(!class_exists('VmTemplate')) require(VMPATH_SITE.DS.'helpers'.DS.'vmtemplate.php');
 		$vmStyle = VmTemplate::loadVmTemplateStyle();
 		$template = $vmStyle['template'];
-		$templatePath         = VMPATH_ROOT . DS . 'templates' . DS . $template . DS . 'html' . DS . $group . DS . $pluginName . DS . $layout . '.php';
-		$defaultPath          = VMPATH_ROOT . DS . 'plugins' . DS . $group . DS . $pluginName . DS . 'tmpl' . DS . $layout . '.php';
-		$defaultPathWithGroup = VMPATH_ROOT . DS . 'plugins' . DS . $group . DS . $pluginName . DS . $pluginName . DS . 'tmpl' . DS . $layout . '.php';
+		$templatePath         = VMPATH_ROOT .'/templates/'. $template .'/html/'. $group . '/' . $pluginName . '/' . $layout . '.php';
+		$defaultPath          = VMPATH_ROOT .'/plugins/'. $group . '/' . $pluginName .'/tmpl/'. $layout . '.php';
+		$defaultPathWithGroup = VMPATH_ROOT .'/plugins/'. $group . '/' . $pluginName . '/' . $pluginName .'/tmpl/'. $layout . '.php';
 
 		if (JFile::exists ($templatePath)) {
 			$layoutPath= $templatePath;
@@ -763,7 +749,7 @@ abstract class vmPlugin extends JPlugin {
 	 */
 	public function getTemplatePath($pluginName, $group, $layout = 'default') {
 		$layoutPath = vmPlugin::_getLayoutPath ($pluginName, 'vm' . $group, $layout);
-		return str_replace(DS . $layout . '.php','',$layoutPath );
+		return str_replace('/' . $layout . '.php','',$layoutPath );
 	}
 
 }

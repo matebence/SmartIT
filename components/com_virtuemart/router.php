@@ -824,7 +824,7 @@ class vmrouterHelper {
 			//if ( $this->seo_translate ) {
 			vmLanguage::loadJLang('com_virtuemart.sef',true);
 			/*} else {
-				$this->Jlang = JFactory::getLanguage();
+				$this->Jlang = vmLanguage::getLanguage();
 			}*/
 
 			$this->byMenu =  (int)VmConfig::get('router_by_menu', 0);
@@ -1397,7 +1397,7 @@ class vmrouterHelper {
 				} else $this->menu['virtuemart'] = $homeid;
 			}
 		}
-		vmdebug('Router parse, using Itemid',$this->Itemid);
+		//vmdebug('Router parse, using Itemid',$this->Itemid);
 		$mCache[$h.$this->Itemid] = $this->menu;
 	}
 

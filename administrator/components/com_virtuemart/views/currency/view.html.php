@@ -13,14 +13,11 @@
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
-* @version $Id: view.html.php 9413 2017-01-04 17:20:58Z Milbo $
+* @version $Id: view.html.php 9831 2018-05-07 13:45:33Z Milbo $
 */
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-
-// Load the view framework
-if(!class_exists('VmViewAdmin'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmin.php');
 
 /**
  * HTML View class for maintaining the list of currencies
@@ -33,15 +30,7 @@ class VirtuemartViewCurrency extends VmViewAdmin {
 
 	function display($tpl = null) {
 
-		// Load the helper(s)
-
-
-		if (!class_exists('VmHTML'))
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'html.php');
-
 		$model = VmModel::getModel();
-
-
 		$config = JFactory::getConfig();
 		$layoutName = vRequest::getCmd('layout', 'default');
 		if ($layoutName == 'edit') {

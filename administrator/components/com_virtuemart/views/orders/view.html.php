@@ -18,9 +18,6 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
 
-// Load the view framework
-if(!class_exists('VmViewAdmin'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmin.php');
-
 /**
  * HTML View class for the VirtueMart Component
  *
@@ -30,16 +27,6 @@ if(!class_exists('VmViewAdmin'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmi
 class VirtuemartViewOrders extends VmViewAdmin {
 
 	function display($tpl = null) {
-
-
-		//Load helpers
-		if (!class_exists('CurrencyDisplay'))
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'currencydisplay.php');
-
-		if (!class_exists('VmHTML'))
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'html.php');
-
-		if(!class_exists('vmPSPlugin')) require(VMPATH_PLUGINLIBS.DS.'vmpsplugin.php');
 
 		$app = JFactory::getApplication();
 		$orderStatusModel=VmModel::getModel('orderstatus');
@@ -55,9 +42,6 @@ class VirtuemartViewOrders extends VmViewAdmin {
 		if ($curTask == 'edit') {
 			vmLanguage::loadJLang('com_virtuemart_shoppers',TRUE);
 			vmLanguage::loadJLang('com_virtuemart_orders', true);
-
-			//For getOrderStatusName
-			if (!class_exists('ShopFunctions'))	require(VMPATH_ADMIN . DS . 'helpers' . DS . 'shopfunctions.php');
 
 			// Load addl models
 			$userFieldsModel = VmModel::getModel('userfields');
@@ -159,7 +143,7 @@ class VirtuemartViewOrders extends VmViewAdmin {
 			/* Data for the Edit Status form popup */
 			$_currentOrderStat = $order['details']['BT']->order_status;
 			// used to update all item status in one time
-			$_orderStatusSelect = JHtml::_('select.genericlist', $orderStates, 'order_status', 'style="width:200px;', 'order_status_code', 'order_status_name', $_currentOrderStat, 'order_items_status',true);
+			$_orderStatusSelect = JHtml::_('select.genericlist', $orderStates, 'order_status', 'style="width:200px;"', 'order_status_code', 'order_status_name', $_currentOrderStat, 'order_items_status',true);
 			$this->assignRef('orderStatSelect', $_orderStatusSelect);
 			$this->assignRef('currentOrderStat', $_currentOrderStat);
 
@@ -172,7 +156,6 @@ class VirtuemartViewOrders extends VmViewAdmin {
 			self::showhelp();
 		}
 		else if ($curTask == 'editOrderItem') {
-			if(!class_exists('calculationHelper')) require(VMPATH_ADMIN.DS.'helpers'.DS.'calculationh.php');
 
 			$this->assignRef('orderstatuses', $orderStates);
 
@@ -205,10 +188,8 @@ class VirtuemartViewOrders extends VmViewAdmin {
 
 			$this->lists['vendors']='';
 			if($this->showVendors()){
-				$this->lists['vendors'] = Shopfunctions::renderVendorList();
+			//	$this->lists['vendors'] = Shopfunctions::renderVendorList(userstate missing, 'virtuemart_vendor_id', true);
 			}
-
-			if(!class_exists('CurrencyDisplay'))require(VMPATH_ADMIN.DS.'helpers'.DS.'currencydisplay.php');
 
 			/* Apply currency This must be done per order since it's vendor specific */
 			$_currencies = array(); // Save the currency data during this loop for performance reasons
@@ -220,7 +201,6 @@ class VirtuemartViewOrders extends VmViewAdmin {
 				    if(!empty($order->order_currency)){
 					    $currency = $order->order_currency;
 				    } else {
-						if(!class_exists('VirtueMartModelVendor')) require(VMPATH_ADMIN.DS.'models'.DS.'vendor.php');
 						$vId = empty($order->virtuemart_vendor_id)? 1:$order->virtuemart_vendor_id;
 						$currObj = VirtueMartModelVendor::getVendorCurrency($vId);
 						$currency = $currObj->virtuemart_currency_id;

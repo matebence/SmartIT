@@ -1,4 +1,6 @@
 <?php
+defined ('_JEXEC') or die();
+
 /**
  * abstract controller class containing get,store,delete,publish and pagination
  *
@@ -18,8 +20,6 @@
  *
  * http://virtuemart.net
  */
-jimport('joomla.application.component.controller');
-if (!class_exists('ShopFunctions')) require(VMPATH_ADMIN.DS.'helpers'.DS.'shopfunctions.php');
 
 class VmController extends JControllerLegacy{
 
@@ -74,7 +74,7 @@ class VmController extends JControllerLegacy{
 		$viewLayout	= vRequest::getCmd('layout', 'default');
 
 		if(vRequest::getCmd('manage')){
-			$this->addViewPath(VMPATH_ADMIN . DS . 'views');
+			$this->addViewPath(VMPATH_ADMIN .'/views');
 			$this->basePath = VMPATH_ROOT.'/administrator/components/com_virtuemart';
 		}
 
@@ -82,7 +82,7 @@ class VmController extends JControllerLegacy{
 
 		$app = JFactory::getApplication();
 		if($app->isSite()){
-			$view->addTemplatePath(VMPATH_ADMIN.DS.'views'.DS.$viewName.DS.'tmpl');
+			$view->addTemplatePath(VMPATH_ADMIN.'/views/'.$viewName.'/tmpl');
 		}
 
 		// Set the layout
@@ -137,7 +137,7 @@ class VmController extends JControllerLegacy{
 		vRequest::setVar('view', $this->_cname);
 		vRequest::setVar('layout', $layout);
 
-		$this->addViewPath(VMPATH_ADMIN . DS . 'views');
+		$this->addViewPath(VMPATH_ADMIN .'/views');
 		$document = JFactory::getDocument();
 		$viewType = $document->getType();
 		$view = $this->getView($this->_cname, $viewType);
@@ -347,7 +347,6 @@ class VmController extends JControllerLegacy{
 	 * @see JController::getModel()
 	 */
 	function getModel($name = '', $prefix = '', $config = array()){
-		if(!class_exists('ShopFunctions'))require(VMPATH_ADMIN.DS.'helpers'.DS.'shopfunctions.php');
 
 		if(empty($name)) $name = false;
 		return VmModel::getModel($name);

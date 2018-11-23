@@ -13,14 +13,11 @@
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
-* @version $Id: view.html.php 9420 2017-01-12 09:35:36Z Milbo $
+* @version $Id: view.html.php 9869 2018-06-13 09:03:47Z Milbo $
 */
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-
-// Load the view framework
-if(!class_exists('VmViewAdmin'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmin.php');
 
 /**
  * HTML View class for maintaining the list of shipment
@@ -33,14 +30,6 @@ class VirtuemartViewShipmentmethod extends VmViewAdmin {
 
 	function display($tpl = null) {
 
-		// Load the helper(s)
-		$this->addHelperPath(VMPATH_ADMIN.DS.'helpers');
-
-		if(!class_exists('vmPSPlugin')) require(VMPATH_PLUGINLIBS.DS.'vmpsplugin.php');
-
-		if (!class_exists('VmHTML'))
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'html.php');
-
 		$model = VmModel::getModel();
 
 		$layoutName = vRequest::getCmd('layout', 'default');
@@ -50,12 +39,12 @@ class VirtuemartViewShipmentmethod extends VmViewAdmin {
 		if ($layoutName == 'edit') {
 			vmLanguage::loadJLang('plg_vmpsplugin', false);
 
-			JForm::addFieldPath(VMPATH_ADMIN . DS . 'fields');
+			JForm::addFieldPath(VMPATH_ADMIN .'/fields');
 
 			$shipment = $model->getShipment();
 
 			// Get the payment XML.
-			$formFile	= vRequest::filterPath( VMPATH_ROOT .DS. 'plugins' .DS. 'vmshipment' .DS. $shipment->shipment_element .DS. $shipment->shipment_element . '.xml');
+			$formFile	= vRequest::filterPath( VMPATH_ROOT .'/plugins/vmshipment/'. $shipment->shipment_element .'/'. $shipment->shipment_element . '.xml');
 			if (file_exists($formFile)){
 				$shipment->form = JForm::getInstance($shipment->shipment_element, $formFile, array(),false, '//vmconfig | //config[not(//vmconfig)]');
 				$shipment->params = new stdClass();
@@ -66,17 +55,11 @@ class VirtuemartViewShipmentmethod extends VmViewAdmin {
 			} else {
 				$shipment->form = null;
 			}
-			if (!class_exists('VmImage'))
-				require(VMPATH_ADMIN . DS . 'helpers' . DS . 'image.php');
-
-			 if(!class_exists('VirtueMartModelVendor')) require(VMPATH_ADMIN.DS.'models'.DS.'vendor.php');
-
-
 
 			if($this->showVendors()){
-					$vendorList= ShopFunctions::renderVendorList($shipment->virtuemart_vendor_id);
-					$this->assignRef('vendorList', $vendorList);
-			 }
+				$vendorList= ShopFunctions::renderVendorList($shipment->virtuemart_vendor_id);
+				$this->assignRef('vendorList', $vendorList);
+			}
 
 			$this->pluginList = self::renderInstalledShipmentPlugins($shipment->shipment_jplugin_id);
 			$this->assignRef('shipment', $shipment);
@@ -105,7 +88,7 @@ class VirtuemartViewShipmentmethod extends VmViewAdmin {
 
 			foreach ($this->shipments as &$data){
 				// Write the first 5 shoppergroups in the list
-				$data->shipmentShoppersList = shopfunctions::renderGuiList($data->virtuemart_shoppergroup_ids,'shoppergroups','shopper_group_name','shopper');
+				$data->shipmentShoppersList = shopfunctions::renderGuiList($data->virtuemart_shoppergroup_ids,'shoppergroups','shopper_group_name','shoppergroup');
 			}
 
 			$this->pagination = $model->getPagination();

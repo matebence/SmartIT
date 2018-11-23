@@ -19,8 +19,7 @@
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access for invoices');
-if(!class_exists('VmModel'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmmodel.php');
-if(!class_exists('VmPdf'))require(VMPATH_SITE.DS.'helpers'.DS.'vmpdf.php');
+
 
 // Load the controller framework
 jimport('joomla.application.component.controller');
@@ -148,7 +147,7 @@ class VirtueMartControllerInvoice extends JControllerLegacy
 
 	public function samplePDF() {
 		if(!class_exists('VmVendorPDF')){
-			vmError('vmPdf: For the pdf, you must install the tcpdf library at '.VMPATH_LIBS.DS.'tcpdf');
+			vmError('vmPdf: For the pdf, you must install the tcpdf library at '.VMPATH_LIBS.'/tcpdf');
 			return 0;
 		}
 
@@ -161,17 +160,16 @@ class VirtueMartControllerInvoice extends JControllerLegacy
 
 	function getViewWithTemplate($viewName, $format){
 
-		$this->addViewPath( VMPATH_SITE.DS.'views' );
+		$this->addViewPath( VMPATH_SITE .'/views' );
 		$view = $this->getView($viewName, $format);
 		$this->writeJs = false;
-		$view->addTemplatePath( VMPATH_SITE.DS.'views'.DS.$viewName.DS.'tmpl' );
+		$view->addTemplatePath( VMPATH_SITE .'/views/'. $viewName .'/tmpl' );
 
-		if(!class_exists('VmTemplate')) require(VMPATH_SITE.DS.'helpers'.DS.'vmtemplate.php');
 		$template = VmTemplate::loadVmTemplateStyle();
 		$templateName = VmTemplate::setTemplate($template);
 
 		if(!empty($templateName)){
-			$TemplateOverrideFolder = JPATH_SITE.DS."templates".DS.$templateName.DS."html".DS."com_virtuemart".DS."invoice";
+			$TemplateOverrideFolder = JPATH_SITE .'/templates/'.$templateName.'/html/com_virtuemart/invoice';
 			if(file_exists($TemplateOverrideFolder)){
 				$view->addTemplatePath( $TemplateOverrideFolder);
 			}
@@ -183,20 +181,21 @@ class VirtueMartControllerInvoice extends JControllerLegacy
 
 		vmLanguage::loadJLang('com_virtuemart',1);
 
-		$invModel = VmModel::getModel('invoice');
 		$path = VirtueMartModelInvoice::getInvoicePath();
 
 		$invoiceNumber = vRequest::getString('invoiceNumber',false);
-
+		$invoiceDate = '';
 		if($invoiceNumber) {
-			$invM = VmModel::getModel('invoice');
-			$storedOIds = $invM->getInvoiceEntry($orderDetails['details']['BT']->virtuemart_order_id, false, 'invoice_number');
-			if(!in_array($invoiceNumber,$storedOIds)){
-				$invoiceNumber = false;
+			$q = 'SELECT `invoice_number`, `created_on` FROM #__virtuemart_invoices WHERE `virtuemart_order_id`="'.$orderDetails['details']['BT']->virtuemart_order_id.'" AND `invoice_number` = "'.$invoiceNumber.'"';
+			$db = JFactory::getDbo();
+			$db->setQuery($q);
+			if($res = $db->loadAssoc()){
+				$invoiceNumber = $res['invoice_number'];
+				$invoiceDate = $res['created_on'];
 			}
 		}
 
-		if(!$invoiceNumber or empty($invoiceNumber)){
+		if(empty($invoiceNumber)){
 			$orderModel = VmModel::getModel('orders');
 			$invoiceNumberDate=array();
 			if (!  $orderModel->createInvoiceNumber($orderDetails['details']['BT'], $invoiceNumberDate)) {
@@ -205,11 +204,11 @@ class VirtueMartControllerInvoice extends JControllerLegacy
 
 			if(!empty($invoiceNumberDate[0])){
 				$invoiceNumber = $invoiceNumberDate[0];
+				$invoiceDate = $invoiceNumberDate[1];
 			} else {
 				$invoiceNumber = FALSE;
 			}
 		}
-
 
 		if(!$invoiceNumber or empty($invoiceNumber)){
 			vmError('getInvoicePDF Cant create pdf, createInvoiceNumber failed');
@@ -226,12 +225,10 @@ class VirtueMartControllerInvoice extends JControllerLegacy
 			return $path;
 		}
 
-
-
 		$view = $this->getViewWithTemplate($viewName, $format);
 
-		$view->invoiceNumber = $invoiceNumberDate[0];
-		$view->invoiceDate = $invoiceNumberDate[1];
+		$view->invoiceNumber = $invoiceNumber;
+		$view->invoiceDate = $invoiceDate;
 
 		$view->orderDetails = $orderDetails;
 		$view->uselayout = $layout;

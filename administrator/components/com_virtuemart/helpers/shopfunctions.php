@@ -10,8 +10,9 @@ defined ('_JEXEC') or die('Direct Access to ' . basename (__FILE__) . ' is not a
  * @subpackage Helpers
  * @author Max Milbers
  * @author Patrick Kohl
- * @copyright Copyright (c) 2004-2008 Soeren Eberhardt-Biermann, 2009 VirtueMart Team. All rights reserved.
- * @version $Id: shopfunctions.php 9772 2018-02-28 21:16:40Z Milbo $
+ * @copyright Copyright (c) 2004-2008 Soeren Eberhardt-Biermann, 2009 - 2018 VirtueMart Team. All rights reserved.
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL 2, see COPYRIGHT.php
+ * @version $Id: shopfunctions.php 9882 2018-06-20 12:25:32Z Milbo $
  */
 class ShopFunctions {
 
@@ -21,6 +22,71 @@ class ShopFunctions {
 	public function __construct () {
 
 	}
+
+
+
+	/**
+	 * Builds an bulleted list for information (not chooseable) no links
+	 *
+	 * @author
+	 *
+	 * @param array $idList ids
+	 * @param string $table vmTable to use
+	 * @param string $name fieldname for the name
+	 * @param string $view view for the links
+	 * @param bool $tableXref the xref table
+	 * @param bool $tableSecondaryKey the fieldname of the xref table
+	 * @param int $quantity
+	 * @param bool $translate
+	 * @return string
+	 */
+	static public function renderSimpleBulletList ($idList, $table, $name, $view, $tableXref = false, $tableSecondaryKey = false, $quantity = 5, $translate = true ) {
+
+		$list = '';
+		$list = '<ul>';
+
+		if ($view != 'user' and $view != 'shoppergroup') {
+			$cid = 'cid';
+		} else if ($view == 'user'){
+			$cid = 'virtuemart_user_id';
+		} else {
+			$cid = 'virtuemart_shoppergroup_id';
+		}
+
+		$model = new VmModel();
+		$table = $model->getTable($table);
+
+		if(!is_array($idList)){
+			$db = JFactory::getDBO ();
+			$q = 'SELECT `' . $table->getPKey() . '` FROM `#__virtuemart_' . $db->escape ($tableXref) . '` WHERE ' . $db->escape ($tableSecondaryKey) . ' = "' . (int)$idList . '"';
+			$db->setQuery ($q);
+			$idList = $db->loadColumn ();
+		}
+
+		$i = 0;
+
+		foreach($idList as $id ){
+
+			$item = $table->load ((int)$id);
+			if($translate) $item->$name = vmText::_($item->$name);
+			$link = JHtml::_('link', JRoute::_('index.php?option=com_virtuemart&view='.$view.'&task=edit&'.$cid.'[]='.$id,false), $item->$name);
+			if($i<$quantity and $i<=count($idList)){
+				$list .= '<li>' . $link . '</li>';
+			} else if ($i==$quantity and $i<count($idList)){
+				$list .= '<li> ...... </li>';
+			}
+
+			$i++;
+		}
+		$list .= '</ul>';
+		return $list;
+	}
+
+
+
+
+
+
 
 	/**
 	 * Builds an enlist for information (not chooseable)
@@ -97,7 +163,7 @@ class ShopFunctions {
 	 * @param bool $multiple if the select list should allow multiple selections
 	 * @return string HTML select option list
 	 */
-	static public function renderVendorList ($vendorId=false, $name = 'virtuemart_vendor_id') {
+	static public function renderVendorList ($vendorId=false, $name = 'virtuemart_vendor_id', $sendForm = false) {
 
 		$view = vRequest::getCmd('view',false);
 		
@@ -120,31 +186,43 @@ class ShopFunctions {
 			}
 			return '<span type="text" size="14" class="inputbox" readonly="">' . $vendor . '</span>';
 		} else {
-			return self::renderVendorFullVendorList($vendorId,false,$name);
+			return self::renderVendorFullVendorList($vendorId, false, $name, $sendForm);
 		}
 
 	}
 
-	static public function renderVendorFullVendorList($vendorId, $multiple = false, $name = 'virtuemart_vendor_id'){
+	static public function renderVendorFullVendorList($vendorId, $multiple = false, $name = 'virtuemart_vendor_id', $sendForm = true){
 
 		$db = JFactory::getDBO ();
 
-		$q = 'SELECT `virtuemart_vendor_id`,`vendor_name` FROM #__virtuemart_vendors';
+		$q = 'SELECT `virtuemart_vendor_id`,`vendor_name` FROM #__virtuemart_vendors ORDER BY `vendor_name` ASC';
 		$db->setQuery ($q);
 		$vendors = $db->loadAssocList ();
 
 		$attrs = array();
-		if(!class_exists('VmHtml')) require(VMPATH_ADMIN.DS.'helpers'.DS.'html.php');
-		$id = VmHtml::ensureUniqueId('vendor_name'.$vendorId);
+
+		$id = '[';
 		$idA = $name;
 		$attrs['class'] = 'vm-chzn-select vm-drop';
 		if ($multiple) {
 			$attrs['multiple'] = 'multiple';
 			$idA .= '[]';
 		} else {
-			$emptyOption = JHtml::_ ('select.option', '', vmText::_ ('COM_VIRTUEMART_LIST_EMPTY_OPTION'), 'virtuemart_vendor_id', 'vendor_name');
+			$emptyOption = JHtml::_ ('select.option', '', vmText::_ ('COM_VIRTUEMART_SELECT_VENDOR'), 'virtuemart_vendor_id', 'vendor_name');
 			array_unshift ($vendors, $emptyOption);
 		}
+
+		if($sendForm){
+			$j = 'jQuery(document).ready(function() {
+jQuery(".changeSendForm")
+	.off("change",Virtuemart.sendCurrForm)
+    .on("change",Virtuemart.sendCurrForm);
+})';
+			vmJsApi::addJScript('sendFormChange',$j);
+			$attrs['class'] .= ' changeSendForm';
+
+		}
+
 		$listHTML = JHtml::_ ('select.genericlist', $vendors, $idA, $attrs, 'virtuemart_vendor_id', 'vendor_name', $vendorId, $id);
 		return $listHTML;
 	}
@@ -216,9 +294,6 @@ class ShopFunctions {
 	 */
 	static function renderTaxList ($selected, $name = 'product_tax_id', $class = '') {
 
-		if (!class_exists ('VirtueMartModelCalc')) {
-					require(VMPATH_ADMIN . DS . 'models' . DS . 'calc.php');
-				}
 		$taxes = VirtueMartModelCalc::getTaxes ();
 
 		$taxrates = array();
@@ -469,10 +544,6 @@ class ShopFunctions {
 	 */
 	static function renderLWHUnitList ($name, $selected) {
 
-		if (!class_exists ('VmHTML')) {
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'html.php');
-		}
-
 		$lwh_unit_default = array('M' => vmText::_ ('COM_VIRTUEMART_UNIT_NAME_M')
 		, 'CM'                        => vmText::_ ('COM_VIRTUEMART_UNIT_NAME_CM')
 		, 'MM'                        => vmText::_ ('COM_VIRTUEMART_UNIT_NAME_MM')
@@ -494,7 +565,6 @@ class ShopFunctions {
 	 * @author Oscar van Eijk
 	 */
 	static function generateStAddressList ($view, $userModel, $task) {
-		if(!class_exists('ShopFunctionsF')) require(VMPATH_SITE.DS.'helpers'.DS.'shopfunctionsf.php');
 		return shopFunctionsF::generateStAddressList($view, $userModel, $task);
 	}
 
@@ -506,7 +576,6 @@ class ShopFunctions {
 	 * @return string
 	 */
 	static public function renderVendorAddress ($vendorId,$lineSeparator="<br />", $skips = array('name','username','email','agreed')) {
-		if(!class_exists('ShopFunctionsF')) require(VMPATH_SITE.DS.'helpers'.DS.'shopfunctionsf.php');
 		return shopFunctionsF::renderVendorAddress($vendorId, $lineSeparator, $skips);
 	}
 
@@ -811,7 +880,6 @@ class ShopFunctions {
 	 * @return string The name of the order status
 	 */
 	static public function getOrderStatusName ($_code) {
-		if(!class_exists('ShopFunctionsF')) require(VMPATH_SITE.DS.'helpers'.DS.'shopfunctionsf.php');
 		return shopFunctionsF::getOrderStatusName($_code);
 	}
 
@@ -820,7 +888,6 @@ class ShopFunctions {
 	 * @deprecated use shopFunctionsF::InvoiceNumberReserved instead
 	 */
 	static function InvoiceNumberReserved ($invoice_number) {
-		if(!class_exists('ShopFunctionsF')) require(VMPATH_SITE.DS.'helpers'.DS.'shopfunctionsf.php');
 		return shopFunctionsF::InvoiceNumberReserved($invoice_number);
 	}
 
@@ -1024,7 +1091,6 @@ class ShopFunctions {
 		if(empty($safePath)){
 			$warn = 'EMPTY';
 		} else {
-			if(!class_exists('JFolder')) require_once(VMPATH_LIBS.DS.'joomla'.DS.'filesystem'.DS.'folder.php');
 			$exists = JFolder::exists($safePath);
 			if(!$exists){
 				$warn = 'WRONG';
@@ -1066,7 +1132,6 @@ class ShopFunctions {
 	 * @return the invoice folder name
 	 */
 	static function getInvoiceFolderName() {
-		if(!class_exists('ShopFunctionsF')) require(VMPATH_SITE.DS.'helpers'.DS.'shopfunctionsf.php');
 		return ShopFunctionsF::getInvoiceFolderName();
 	}
 	/*
@@ -1178,7 +1243,7 @@ class ShopFunctions {
 
 		if(!empty($vmtemplate) and is_array( $vmtemplate )) $vmtemplate = $vmtemplate['template'];
 
-		if(is_Dir( VMPATH_ROOT.DS.'templates'.DS.$vmtemplate.DS.'images'.DS.'availability'.DS )) {
+		if(is_Dir( VMPATH_ROOT.'/templates/'.$vmtemplate.'/images/availability/' )) {
 			return '/templates/'.$vmtemplate.'/images/availability/';
 		} else if(is_Dir(VMPATH_ROOT.'/'.VmConfig::get('assets_general_path').'images/availability/')){
 			return '/'.VmConfig::get('assets_general_path').'images/availability/';

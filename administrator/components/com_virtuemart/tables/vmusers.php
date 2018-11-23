@@ -18,10 +18,7 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-if(!class_exists('VmTableData'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmtabledata.php');
-
-
- class TableVmusers extends VmTableData {
+class TableVmusers extends VmTableData {
 
 	/** @var int Vendor ID */
 	var $virtuemart_user_id		= 0;

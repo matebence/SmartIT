@@ -13,14 +13,11 @@
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
-* @version $Id: view.html.php 9467 2017-03-08 22:45:00Z Milbo $
+* @version $Id: view.html.php 9831 2018-05-07 13:45:33Z Milbo $
 */
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die('Restricted access');
-
-// Load the view framework
-if(!class_exists('VmViewAdmin'))require(VMPATH_ADMIN.DS.'helpers'.DS.'vmviewadmin.php');
 
 /**
  * HTML View class for ratings (and customer reviews)
@@ -33,12 +30,6 @@ class VirtuemartViewRatings extends VmViewAdmin {
 
 		$mainframe = Jfactory::getApplication();
 		$option = vRequest::getCmd('option');
-
-		//Load helpers
-
-
-		if (!class_exists('VmHTML'))
-			require(VMPATH_ADMIN . DS . 'helpers' . DS . 'html.php');
 
 		/* Get the review IDs to retrieve (input variable may be cid, cid[] or virtuemart_rating_review_id */
 		$cids = vRequest::getInt('cid', vRequest::getVar('virtuemart_rating_review_id',0));

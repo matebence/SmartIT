@@ -30,11 +30,6 @@ abstract class N2SmartSliderAbstract extends N2SmartSliderRenderableAbstract {
     /** @var  N2Data */
     public $params;
 
-    /**
-     * @var N2SmartSliderFeatures
-     */
-    public $features;
-
     public $disableResponsive = false;
 
     protected $parameters = null;
@@ -75,6 +70,13 @@ abstract class N2SmartSliderAbstract extends N2SmartSliderRenderableAbstract {
     public $isStaticEdited = false;
 
     private $sliderRow = null;
+
+    public $exposeSlideData = array(
+        'title'         => false,
+        'description'   => false,
+        'thumbnail'     => false,
+        'thumbnailType' => false
+    );
 
     public function __construct($sliderId, $parameters) {
 
@@ -120,9 +122,18 @@ abstract class N2SmartSliderAbstract extends N2SmartSliderRenderableAbstract {
         $class = 'N2SmartSlider' . $resourceName . $type;
 
         if (!class_exists($class, false)) {
+            try {
+                N2Loader::importPath(N2SSPluginSliderType::getSliderType($type)
+                                                         ->getPath() . $resourceName);
+            } catch (Exception $e) {
+                if ($type != 'simple') {
+                    $this->data->set('type', 'simple');
 
-            N2Loader::importPath(N2SSPluginSliderType::getSliderType($type)
-                                                     ->getPath() . $resourceName);
+                    return $this->getSliderTypeResource($resourceName);
+                }
+
+                throw $e;
+            }
         }
 
         return new $class($this);
@@ -316,12 +327,50 @@ abstract class N2SmartSliderAbstract extends N2SmartSliderRenderableAbstract {
 
         $alias = $this->data->get('alias', '');
         if (intval($this->params->get('alias-id', 0)) && !empty($alias)) {
-            $aliasCode = '<div id="' . $alias . '" style="height:0; line-height:0; min-height:0; margin:0; padding:0;"></div>';
-            if (intval($this->params->get('alias-smoothscroll', 0))) {
-                $aliasCode .= '<script type="text/javascript">jQuery(document).ready(function(){jQuery("a[href=\'#' . $alias . '\']").click(function(){jQuery("html, body").animate({scrollTop:jQuery("#' . $alias . '").offset().top}, 400);});});</script>';
+            $aliasHTML = '<div id="' . $alias . '" style="height:0; line-height:0; min-height:0; margin:0; padding:0;"></div>';
+            if (intval($this->params->get('alias-slideswitch', 0))) {
+                $slide_count = count($this->slides);
+                for ($i = 1; $i < $slide_count + 1; $i++) {
+                    $aliasHTML .= '<div id="' . $alias . '-' . $i . '" style="height:0; line-height:0; min-height:0; margin:0; padding:0;"></div>';
+                }
+                $aliasJS = '
+                var anchor = window.location.href.split("#")[1];
+                if(typeof anchor !== \'undefined\' && anchor.indexOf("-") > -1){
+                    var anchorparts = anchor.split("-");
+                    var slide = parseInt(anchorparts[anchorparts.length - 1])-1;
+                    window["ss' . $this->sliderId . '"] = slide;
+                }';
+                if (intval($this->params->get('alias-slideswitch', 0))) {
+                    $aliasJS = '
+                    N2R(\'windowLoad\',function($){';
+                    $speed = N2SmartSliderSettings::get('smooth-scroll-speed', 400);
+                    for ($i = 1; $i < $slide_count + 1; $i++) {
+                        $aliasJS .= '$("a[href=\'#' . $alias . '-' . $i . '\']").click(function(){
+                                        N2R("#n2-ss-' . $this->sliderId . '", function($, slider){
+                                            slider.slide(' . ($i - 1) . ');
+                                        });';
+                        if (intval($this->params->get('alias-smoothscroll', 0))) {
+                            $aliasJS .= '$("html, body").animate({scrollTop:$("#' . $alias . '-' . $i . '").offset().top}, ' . $speed . ')';
+                        }
+                        $aliasJS .= '});';
+                    }
+                    $aliasJS .= '});';
+                }
             }
-            $slider = $aliasCode . $slider;
+            if (intval($this->params->get('alias-smoothscroll', 0))) {
+                $speed     = N2SmartSliderSettings::get('smooth-scroll-speed', 400);
+                $aliasJS .= '
+                N2R(\'windowLoad\',function($){
+                    $("a[href=\'#' . $alias . '\']").click(function(){
+                        $("html, body").animate({scrollTop:$("#' . $alias . '").offset().top}, ' . $speed . ');
+                    });
+                });';
+            }
+            $slider = $aliasHTML . $slider;
+            N2JS::addInline($aliasJS);
         }
+
+        $slider = N2Html::tag("div", array('class' => 'n2-section-smartslider'), $slider);
 
         if (intval($this->params->get('clear-both', 0))) {
             $slider = '<div class="n2-clear"></div>' . $slider;

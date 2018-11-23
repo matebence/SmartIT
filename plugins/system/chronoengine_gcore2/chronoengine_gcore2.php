@@ -169,7 +169,10 @@ class PlgSystemChronoengine_Gcore2 extends JPlugin{
 		}
 		
 		if(class_exists('SemanticTheme')){
-			if(!empty(SemanticTheme::$packassets) AND !empty(SemanticTheme::$template->params->get('assetsPath'))){
+			$pa = SemanticTheme::$packassets;
+			$tap = SemanticTheme::$template->params->get('assetsPath');
+			
+			if(!empty($pa) AND !empty($tap)){
 				SemanticTheme::package(SemanticTheme::$template, SemanticTheme::$template->params->get('assetsPath'), 'js');
 				SemanticTheme::package(SemanticTheme::$template, SemanticTheme::$template->params->get('assetsPath'), 'css');
 			}

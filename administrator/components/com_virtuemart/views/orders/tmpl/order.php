@@ -12,7 +12,7 @@
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
- * @version $Id: order.php 9800 2018-03-16 10:23:43Z alatak $
+ * @version $Id: order.php 9835 2018-05-15 10:14:43Z Milbo $
  */
 
 // Check to ensure this file is included in Joomla!
@@ -343,8 +343,13 @@ vmJsApi::addJScript('/administrator/components/com_virtuemart/assets/js/orders.j
 					<th   style="text-align: center;" colspan="2"><?php echo vmText::_('COM_VIRTUEMART_ORDER_PRINT_SHIP_TO_LBL') ?></th>
 				</tr>
 			</thead>
+<?php
+			//Create Ship to address if one does not already exist
+			if($this->orderdetails['details']['has_ST'] == false){
+				echo '<td class="key"><label for="STsameAsBT">'. vmText::_('COM_VM_ST_SAME_AS_BT').'</label></td>';
+			echo '<td><input id="STsameAsBT" type="checkbox" checked name="STsameAsBT" value="1" /></td>';
+			}
 
-			<?php
 			foreach ($this->shipmentfields['fields'] as $_field ) {
 				echo '		<tr>'."\n";
 				echo '			<td class="key">'."\n";

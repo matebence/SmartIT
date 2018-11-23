@@ -13,7 +13,7 @@
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
-* @version $Id: edit.php 9413 2017-01-04 17:20:58Z Milbo $
+* @version $Id: edit.php 9851 2018-05-30 07:41:14Z Milbo $
 */
 
 // Check to ensure this file is included in Joomla!
@@ -124,7 +124,7 @@ AdminUIHelper::imitateTabs('start','COM_VIRTUEMART_USERFIELD_DETAILS');
 			</td>
 			<td>
 				<?php
-				$lang = JFactory::getLanguage();
+				$lang = vmLanguage::getLanguage();
 				$text = $lang->hasKey($this->userField->title) ? vmText::_($this->userField->title) : $this->userField->title;
 				?>
 				<input class="required" type="text" name="title" id="title" size="50" value="<?php echo $this->userField->title; ?>" />(<?php echo $text ?>)
