@@ -78,20 +78,10 @@ if( $this->params->get('show_page_heading') && $this->params->get( 'page_heading
 				<div class="sp-simpleportfolio-overlay">
 					<div class="sp-vertical-middle">
 						<div>
-							<div class="sp-simpleportfolio-btns">
-								<?php if( $this->item->video ) { ?>
-								<a class="btn-zoom" href="#" data-featherlight="#sp-simpleportfolio-video<?php echo $this->item->id; ?>"><?php echo JText::_('COM_SPSIMPLEPORTFOLIO_WATCH'); ?></a>
-								<?php } else { ?>
-								<a class="btn-zoom" href="<?php echo $this->item->popup_img_url; ?>" data-featherlight="image"><?php echo JText::_('COM_SPSIMPLEPORTFOLIO_ZOOM'); ?></a>
-								<?php } ?>
-								<a class="btn-view" href="<?php echo $this->item->url; ?>"><?php echo JText::_('COM_SPSIMPLEPORTFOLIO_VIEW'); ?></a>
-							</div>
 							<?php if($this->layout_type != 'default') { ?>
-							<h3 class="sp-simpleportfolio-title">
-								<a href="<?php echo $this->item->url; ?>">
-									<?php echo $this->item->title; ?>
-								</a>
-							</h3>
+							<h2 class="sp-simpleportfolio-title">
+								<?php echo $this->item->title; ?>
+							</h2>
 							<div class="sp-simpleportfolio-tags">
 								<?php echo implode(', ', $this->item->tags); ?>
 							</div>

@@ -65,20 +65,10 @@ $layout_type = $params->get('layout_type', 'default');
 					<div class="sp-simpleportfolio-overlay">
 						<div class="sp-vertical-middle">
 							<div>
-								<div class="sp-simpleportfolio-btns">
-									<?php if( $item->video ) { ?>
-										<a class="btn-zoom" href="#" data-featherlight="#sp-simpleportfolio-video<?php echo $item->id; ?>"><?php echo JText::_('COM_SPSIMPLEPORTFOLIO_WATCH'); ?></a>
-									<?php } else { ?>
-										<a class="btn-zoom" href="<?php echo $item->popup_img_url; ?>" data-featherlight="image"><?php echo JText::_('MOD_SPSIMPLEPORTFOLIO_ZOOM'); ?></a>
-									<?php } ?>
-									<a class="btn-view" href="<?php echo $item->url; ?>"><?php echo JText::_('MOD_SPSIMPLEPORTFOLIO_VIEW'); ?></a>
-								</div>
 								<?php if($layout_type!='default') { ?>
-								<h3 class="sp-simpleportfolio-title">
-									<a href="<?php echo $item->url; ?>">
-										<?php echo $item->title; ?>
-									</a>
-								</h3>
+								<h2 class="sp-simpleportfolio-title">
+									<?php echo $item->title; ?>
+								</h2>
 								<div class="sp-simpleportfolio-tags">
 									<?php echo implode(', ', $item->tags); ?>
 								</div>
