@@ -2153,6 +2153,7 @@ ul.social-icons >li a {
   box-shadow: 0 0 5px rgba(0,0,0,0.2);
 }
 #sp-main-body {
+  background-color: rgb(238, 238, 238);
   padding: 100px 0;
 }
 .com-sppagebuilder #sp-main-body {
