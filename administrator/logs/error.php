@@ -6,3 +6,5 @@
 #Fields: datetime	priority clientip	category	message
 2018-11-24T14:02:43+00:00	INFO ::1	joomlafailure	Username and password do not match or you do not have an account yet.
 2018-11-24T14:02:50+00:00	INFO ::1	joomlafailure	Username and password do not match or you do not have an account yet.
+2018-11-29T18:44:40+00:00	INFO ::1	joomlafailure	Username and password do not match or you do not have an account yet.
+2018-11-29T20:03:01+00:00	INFO ::1	joomlafailure	Username and password do not match or you do not have an account yet.

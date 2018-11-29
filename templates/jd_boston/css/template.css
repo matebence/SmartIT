@@ -6630,3 +6630,6 @@ p.dropcap:first-letter {
   margin-top: 2px;
   padding-right: 8px;
 }
+#sp-googlemap {
+    background-color: #262626;
+}
