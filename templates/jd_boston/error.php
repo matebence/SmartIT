@@ -78,7 +78,6 @@ if ($err_bg = $params->get('error_bg')) {
 					<?php } ?>
 					<h1 class="error-code"><?php echo $this->error->getCode(); ?></h1>
 					<p class="error-message"><?php echo $this->error->getMessage(); ?></p>
-					<a class="btn btn-primary btn-lg" href="<?php echo $this->baseurl; ?>/" title="<?php echo JText::_('HOME'); ?>"><i class="fa fa-chevron-left"></i> <?php echo JText::_('HELIX_GO_BACK'); ?></a>
 					<?php echo $doc->getBuffer('modules', '404', array('style' => 'sp_xhtml')); ?>
 				</div>
 			</div>

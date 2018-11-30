@@ -2017,6 +2017,8 @@ textarea.uneditable-input {
 #sp-top-bar .sp-module {
   display: inline-block;
   margin: 0 0 0 20px;
+  float:  left;
+  margin-right: 20px;
 }
 ul.social-icons {
   list-style: none;
@@ -2153,8 +2155,8 @@ ul.social-icons >li a {
   box-shadow: 0 0 5px rgba(0,0,0,0.2);
 }
 #sp-main-body {
-  background-color: rgb(238, 238, 238);
   padding: 100px 0;
+  background-color: #eee;
 }
 .com-sppagebuilder #sp-main-body {
   padding: 0;
@@ -6630,6 +6632,9 @@ p.dropcap:first-letter {
   margin-top: 2px;
   padding-right: 8px;
 }
-#sp-googlemap {
+#sp-google-map {
     background-color: #262626;
+}
+.form-links {
+    display: none;
 }
