@@ -2017,8 +2017,6 @@ textarea.uneditable-input {
 #sp-top-bar .sp-module {
   display: inline-block;
   margin: 0 0 0 20px;
-  float:  left;
-  margin-right: 20px;
 }
 ul.social-icons {
   list-style: none;
@@ -2156,7 +2154,6 @@ ul.social-icons >li a {
 }
 #sp-main-body {
   padding: 100px 0;
-  background-color: #eee;
 }
 .com-sppagebuilder #sp-main-body {
   padding: 0;
@@ -3799,7 +3796,7 @@ section#sp-top-bar .sp-contact-info a {
   padding: 0px;
 }
 .about-page section#sp-main-body {
-  background: #fbfbfb;
+  background: #eee;
   border-bottom: 1px solid #eaeaea;
 }
 section#sp-main-body {
@@ -6632,9 +6629,9 @@ p.dropcap:first-letter {
   margin-top: 2px;
   padding-right: 8px;
 }
-#sp-google-map {
+#sp-googlemap {
     background-color: #262626;
 }
-.form-links {
-    display: none;
+#sp-main-body, .breadcrumb, #sp-slider{
+    background-color: #eee;
 }

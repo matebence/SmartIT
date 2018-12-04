@@ -142,9 +142,6 @@ if($text_color){ ?>
 						</div>
 						<div class="sc_team_member_overlay" style="opacity: 1; display: none;"></div>
 						<div class="sc_team_more">
-							<a class="sc_team_single_popup" rel="bookmark" href="https://smartcatdesign.net/team_member/richard-j-rocco/"> 
-								<img src="<?php echo JURI::root().'modules/mod_jd_team_showcase/assets' ?>/img/more.png">
-							</a>
 						</div>						
 					</div>
             </div>
