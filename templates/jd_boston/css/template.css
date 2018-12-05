@@ -3658,7 +3658,7 @@ section#sp-top-bar .sp-contact-info a {
 }
 #sp-showcase {
   padding: 130px 0 130px;
-  background: #fff url(../images/about-right.jpg) right bottom no-repeat;
+  background: #fff url(../../../images/articles/about-right.jpg) right bottom no-repeat;
 }
 #sp-showcase .module-title .sp-module-title {
   color: #02aed6;
@@ -3670,7 +3670,7 @@ section#sp-top-bar .sp-contact-info a {
 #sp-feature {
   color: #fff;
   padding: 70px 0 80px;
-  background-image: url(../images/services-banner.jpg);
+  background-image: url(../../../images/articles/services-banner.jpg);
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center top;
@@ -3769,7 +3769,7 @@ section#sp-top-bar .sp-contact-info a {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center top;
-  background-image: url(../images/skill-back.jpg);
+  background-image: url(../../../images/header_background/skill-back.jpg);
   color: #fff;
 }
 #sp-maintop .module-title {
@@ -3960,7 +3960,7 @@ section#sp-main-body {
 #sp-addres-bar-bottom {
   background-size: cover;
   background-position: center top;
-  background-image: url(../images/fullwidth-back.jpg);
+  background-image: url(../../../images/header_background/fullwidth-back.jpg);
 }
 .main-contact-block-horizontal {
   display: flex;
@@ -6629,9 +6629,9 @@ p.dropcap:first-letter {
   margin-top: 2px;
   padding-right: 8px;
 }
+#sp-main-body, #sp-slider {
+    background-color: #eee;
+}
 #sp-googlemap {
     background-color: #262626;
-}
-#sp-main-body, .breadcrumb, #sp-slider{
-    background-color: #eee;
 }
