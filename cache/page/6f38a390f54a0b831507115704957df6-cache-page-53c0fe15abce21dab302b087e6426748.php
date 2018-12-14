@@ -1,38 +1,38 @@
-<?php die("Access Denied"); ?>#x#a:3:{s:4:"body";s:27559:"<!DOCTYPE html>
+<?php die("Access Denied"); ?>#x#a:3:{s:4:"body";s:27015:"<!DOCTYPE html>
 <html prefix="og: http://ogp.me/ns#" xmlns="http://www.w3.org/1999/xhtml" xml:lang="sk-sk" lang="sk-sk" dir="ltr">
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
                 <!-- head -->
-        <base href="http://localhost/smartit/index.php/sk/novinky/item/53-ako-funguje-face-recognition" />
+        <base href="http://app-smartit.8u.cz/index.php/sk/novinky/item/53-ako-funguje-face-recognition" />
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta name="keywords" content="bezpecnost" />
 	<meta name="title" content="Viete ako funguje face recognition technológia?" />
 	<meta name="author" content="Super User" />
-	<meta property="og:url" content="http://localhost/smartit/index.php/sk/novinky/item/53-ako-funguje-face-recognition" />
+	<meta property="og:url" content="http://app-smartit.8u.cz/index.php/sk/novinky/item/53-ako-funguje-face-recognition" />
 	<meta property="og:title" content="Viete ako funguje face recognition technológia?" />
 	<meta property="og:type" content="article" />
-	<meta property="og:image" content="http://localhost/smartit/media/k2/items/cache/90701d02ae3da0e5a21abbd900c25748_M.jpg" />
-	<meta name="image" content="http://localhost/smartit/media/k2/items/cache/90701d02ae3da0e5a21abbd900c25748_M.jpg" />
+	<meta property="og:image" content="http://app-smartit.8u.cz/media/k2/items/cache/90701d02ae3da0e5a21abbd900c25748_M.jpg" />
+	<meta name="image" content="http://app-smartit.8u.cz/media/k2/items/cache/90701d02ae3da0e5a21abbd900c25748_M.jpg" />
 	<meta property="og:description" content="Čo je to face recognition? Motív, prečo napísať tento článok, bol celkom jednoduchý. Pri blúdení po Amazone a snahe nájsť vec, ktorú nutne nepotrebuje..." />
 	<meta name="description" content="Čo je to face recognition? Motív, prečo napísať tento článok, bol celkom jednoduchý. Pri blúdení po Amazone a snahe nájsť vec, ktorú nutne nepotrebuje..." />
 	<meta name="generator" content="Joomla! - Open Source Content Management" />
 	<title>Viete ako funguje face recognition technológia?</title>
-	<link href="/smartit/templates/jd_boston/images/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
-	<link href="/smartit/templates/jd_boston/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
-	<link href="http://localhost/smartit/index.php/sk/component/search/?Itemid=351&amp;id=53:ako-funguje-face-recognition&amp;format=opensearch" rel="search" title="Hľadať SmartIT s.r.o." type="application/opensearchdescription+xml" />
+	<link href="/templates/jd_boston/images/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+	<link href="/templates/jd_boston/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+	<link href="http://app-smartit.8u.cz/index.php/sk/component/search/?Itemid=351&amp;id=53:ako-funguje-face-recognition&amp;format=opensearch" rel="search" title="Hľadať SmartIT" type="application/opensearchdescription+xml" />
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css" rel="stylesheet" type="text/css" />
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
-	<link href="/smartit/components/com_k2/css/k2.css?v=2.8.0" rel="stylesheet" type="text/css" />
+	<link href="/components/com_k2/css/k2.css?v=2.8.0" rel="stylesheet" type="text/css" />
 	<link href="//fonts.googleapis.com/css?family=Raleway:100,200,300,regular,500,600,700,800,900&amp;subset=latin" rel="stylesheet" type="text/css" />
-	<link href="/smartit/templates/jd_boston/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-	<link href="/smartit/templates/jd_boston/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-	<link href="/smartit/templates/jd_boston/css/legacy.css" rel="stylesheet" type="text/css" />
-	<link href="/smartit/templates/jd_boston/css/template.css" rel="stylesheet" type="text/css" />
-	<link href="/smartit/templates/jd_boston/css/presets/preset1.css" rel="stylesheet" type="text/css" class="preset" />
-	<link href="/smartit/templates/jd_boston/css/frontend-edit.css" rel="stylesheet" type="text/css" />
-	<link href="/smartit/modules/mod_jflickr/js/jquery.fancybox/jquery.fancybox-1.3.4.css" rel="stylesheet" type="text/css" />
-	<link href="/smartit/media/mod_languages/css/template.css?0cdebb4a7444232c49cc74ab8c157c47" rel="stylesheet" type="text/css" />
+	<link href="/templates/jd_boston/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link href="/templates/jd_boston/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+	<link href="/templates/jd_boston/css/legacy.css" rel="stylesheet" type="text/css" />
+	<link href="/templates/jd_boston/css/template.css" rel="stylesheet" type="text/css" />
+	<link href="/templates/jd_boston/css/presets/preset1.css" rel="stylesheet" type="text/css" class="preset" />
+	<link href="/templates/jd_boston/css/frontend-edit.css" rel="stylesheet" type="text/css" />
+	<link href="/modules/mod_jflickr/js/jquery.fancybox/jquery.fancybox-1.3.4.css" rel="stylesheet" type="text/css" />
+	<link href="/media/mod_languages/css/template.css?0cdebb4a7444232c49cc74ab8c157c47" rel="stylesheet" type="text/css" />
 	<style type="text/css">
 
 						/* K2 - Magnific Popup Overrides */
@@ -41,22 +41,22 @@
 						.mfp-iframe-scaler iframe {background:#fff;padding:10px;box-sizing:border-box;box-shadow:none;}
 					body{font-family:Raleway, sans-serif; font-size:16px; font-weight:normal; }h1{font-family:Raleway, sans-serif; font-size:40px; font-weight:800; }h2{font-family:Raleway, sans-serif; font-size:32px; font-weight:700; }h3{font-family:Raleway, sans-serif; font-size:32px; font-weight:normal; }h4{font-family:Raleway, sans-serif; font-size:28px; font-weight:normal; }h5{font-family:Raleway, sans-serif; font-size:25px; font-weight:600; }h6{font-family:Raleway, sans-serif; font-size:20px; font-weight:600; }.sp-megamenu-parent{font-family:Raleway, sans-serif; font-size:18px; font-weight:normal; }#sp-top-bar{ background-color:#f5f5f5;color:#999999; }#sp-copyright{ background-color:#000000;color:#ffffff; }#sp-copyright a{color:#ffffff;}#sp-copyright a:hover{color:#ffffff;}.gallery-flickr ul li {list-style-type:none;float:left;background: none;margin-left:0}.gallery-flickr ul {margin: 0} #right .gallery-flickr ul li a,#left .gallery-flickr ul li a,.gallery-flickr ul li a {float:left;margin:0 4px 4px 0;padding: 0;background:none;border: 0;} .gallery-flickr ul li a:hover {background: #ddd} #gallery-flickr {padding: 0;line-height: 0;margin: 0} .clearfix {clear:both}
 	</style>
-	<script type="application/json" class="joomla-script-options new">{"csrf.token":"9fface736c31f149ab20ba8e0a482b21","system.paths":{"root":"\/smartit","base":"\/smartit"},"system.keepalive":{"interval":840000,"uri":"\/smartit\/index.php\/sk\/component\/ajax\/?format=json"}}</script>
-	<script src="/smartit/media/jui/js/jquery.min.js?0cdebb4a7444232c49cc74ab8c157c47" type="text/javascript"></script>
-	<script src="/smartit/media/jui/js/jquery-noconflict.js?0cdebb4a7444232c49cc74ab8c157c47" type="text/javascript"></script>
-	<script src="/smartit/media/jui/js/jquery-migrate.min.js?0cdebb4a7444232c49cc74ab8c157c47" type="text/javascript"></script>
+	<script type="application/json" class="joomla-script-options new">{"csrf.token":"366d73dfb94a56447637b66447272657","system.paths":{"root":"","base":""},"system.keepalive":{"interval":840000,"uri":"\/index.php\/sk\/component\/ajax\/?format=json"}}</script>
+	<script src="/media/jui/js/jquery.min.js?0cdebb4a7444232c49cc74ab8c157c47" type="text/javascript"></script>
+	<script src="/media/jui/js/jquery-noconflict.js?0cdebb4a7444232c49cc74ab8c157c47" type="text/javascript"></script>
+	<script src="/media/jui/js/jquery-migrate.min.js?0cdebb4a7444232c49cc74ab8c157c47" type="text/javascript"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js" type="text/javascript"></script>
-	<script src="/smartit/media/k2/assets/js/k2.frontend.js?v=2.8.0&amp;sitepath=/smartit/" type="text/javascript"></script>
-	<script src="/smartit/templates/jd_boston/js/bootstrap.min.js" type="text/javascript"></script>
-	<script src="/smartit/templates/jd_boston/js/jquery.sticky.js" type="text/javascript"></script>
-	<script src="/smartit/templates/jd_boston/js/main.js" type="text/javascript"></script>
-	<script src="/smartit/templates/jd_boston/js/frontend-edit.js" type="text/javascript"></script>
-	<script src="/smartit/modules/mod_jflickr/js/JFlickr.js" type="text/javascript"></script>
-	<script src="/smartit/modules/mod_jflickr/js/jquery.fancybox/jquery.fancybox-1.3.4.pack.js" type="text/javascript"></script>
-	<script src="/smartit/modules/mod_jflickr/js/jquery.fancybox/jquery.easing-1.3.pack.js" type="text/javascript"></script>
-	<script src="/smartit/media/system/js/core.js?0cdebb4a7444232c49cc74ab8c157c47" type="text/javascript"></script>
-	<!--[if lt IE 9]><script src="/smartit/media/system/js/polyfill.event.js?0cdebb4a7444232c49cc74ab8c157c47" type="text/javascript"></script><![endif]-->
-	<script src="/smartit/media/system/js/keepalive.js?0cdebb4a7444232c49cc74ab8c157c47" type="text/javascript"></script>
+	<script src="/media/k2/assets/js/k2.frontend.js?v=2.8.0&amp;sitepath=/" type="text/javascript"></script>
+	<script src="/templates/jd_boston/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="/templates/jd_boston/js/jquery.sticky.js" type="text/javascript"></script>
+	<script src="/templates/jd_boston/js/main.js" type="text/javascript"></script>
+	<script src="/templates/jd_boston/js/frontend-edit.js" type="text/javascript"></script>
+	<script src="/modules/mod_jflickr/js/JFlickr.js" type="text/javascript"></script>
+	<script src="/modules/mod_jflickr/js/jquery.fancybox/jquery.fancybox-1.3.4.pack.js" type="text/javascript"></script>
+	<script src="/modules/mod_jflickr/js/jquery.fancybox/jquery.easing-1.3.pack.js" type="text/javascript"></script>
+	<script src="/media/system/js/core.js?0cdebb4a7444232c49cc74ab8c157c47" type="text/javascript"></script>
+	<!--[if lt IE 9]><script src="/media/system/js/polyfill.event.js?0cdebb4a7444232c49cc74ab8c157c47" type="text/javascript"></script><![endif]-->
+	<script src="/media/system/js/keepalive.js?0cdebb4a7444232c49cc74ab8c157c47" type="text/javascript"></script>
 	<script type="text/javascript">
 
 var sp_preloader = '0';
@@ -77,22 +77,22 @@ var sp_offanimation = 'default';
 
 	<ul class="lang-inline" dir="ltr">
 									<li class="lang-active">
-			<a href="http://localhost/smartit/index.php/sk/novinky/item/53-ako-funguje-face-recognition">
-												<img src="/smartit/media/mod_languages/images/sk_sk.gif" alt="Slovenčina (Slovak)" title="Slovenčina (Slovak)" />										</a>
+			<a href="http://app-smartit.8u.cz/index.php/sk/novinky/item/53-ako-funguje-face-recognition">
+												<img src="/media/mod_languages/images/sk_sk.gif" alt="Slovenčina (Slovak)" title="Slovenčina (Slovak)" />										</a>
 			</li>
 								<li>
-			<a href="/smartit/index.php/en/">
-												<img src="/smartit/media/mod_languages/images/en.gif" alt="English (UK)" title="English (UK)" />										</a>
+			<a href="/index.php/en/">
+												<img src="/media/mod_languages/images/en.gif" alt="English (UK)" title="English (UK)" />										</a>
 			</li>
 				</ul>
 
 </div>
-</div></div><ul class="sp-contact-info"><li class="sp-contact-mobile"><i class="fa fa-mobile" aria-hidden="true"></i> <a href="tel:+421164789">+421 164 789</a></li><li class="sp-contact-email"><i class="fa fa-envelope" aria-hidden="true"></i> <a href="mailto:info@smartit.sk">info@smartit.sk</a></li></ul></div></div><div id="sp-top2" class="col-sm-6 col-md-6"><div class="sp-column "><ul class="social-icons"><li><a target="_blank" href="https://www.facebook.com/" aria-label="facebook"><i class="fa fa-facebook"></i></a></li><li><a target="_blank" href="https://twitter.com/login" aria-label="twitter"><i class="fa fa-twitter"></i></a></li><li><a target="_blank" href="https://www.linkedin.com/" aria-label="linkedin"><i class="fa fa-linkedin"></i></a></li></ul></div></div></div></div></section><header id="sp-header"><div class="container"><div class="row"><div id="sp-logo" class="col-xs-8 col-sm-3 col-md-3"><div class="sp-column "><div class="logo"><a href="/smartit/"><img class="sp-default-logo" src="/smartit/images/logo/logo.png" alt="SmartIT s.r.o."><img class="sp-retina-logo" src="/smartit/images/logo/logo@2x.png" alt="SmartIT s.r.o." width="200" height="55"></a></div></div></div><div id="sp-menu" class="col-xs-4 col-sm-9 col-md-9"><div class="sp-column ">			<div class='sp-megamenu-wrapper'>
+</div></div><ul class="sp-contact-info"><li class="sp-contact-mobile"><i class="fa fa-mobile" aria-hidden="true"></i> <a href="tel:+421164789">+421 164 789</a></li><li class="sp-contact-email"><i class="fa fa-envelope" aria-hidden="true"></i> <a href="mailto:info@smartit.sk">info@smartit.sk</a></li></ul></div></div><div id="sp-top2" class="col-sm-6 col-md-6"><div class="sp-column "><ul class="social-icons"><li><a target="_blank" href="https://www.facebook.com/" aria-label="facebook"><i class="fa fa-facebook"></i></a></li><li><a target="_blank" href="https://twitter.com/login" aria-label="twitter"><i class="fa fa-twitter"></i></a></li><li><a target="_blank" href="https://www.linkedin.com/" aria-label="linkedin"><i class="fa fa-linkedin"></i></a></li></ul></div></div></div></div></section><header id="sp-header"><div class="container"><div class="row"><div id="sp-logo" class="col-xs-8 col-sm-3 col-md-3"><div class="sp-column "><div class="logo"><a href="/"><img class="sp-default-logo" src="/images/logo/logo.png" alt="SmartIT"><img class="sp-retina-logo" src="/images/logo/logo@2x.png" alt="SmartIT" width="200" height="55"></a></div></div></div><div id="sp-menu" class="col-xs-4 col-sm-9 col-md-9"><div class="sp-column ">			<div class='sp-megamenu-wrapper'>
 				<a id="offcanvas-toggler" class="visible-sm visible-xs" aria-label="Menu" href="#"><i class="fa fa-bars" aria-hidden="true" title="Menu"></i></a>
-				<ul class="sp-megamenu-parent menu-fade hidden-sm hidden-xs"><li class="sp-menu-item"><a  href="/smartit/index.php/sk/"  >Domov</a></li><li class="sp-menu-item"><a  href="/smartit/index.php/sk/o-nas"  >O nás</a></li><li class="sp-menu-item current-item active"><a  href="/smartit/index.php/sk/novinky"  >Novinky</a></li><li class="sp-menu-item"><a  href="/smartit/index.php/sk/recenzie"  >Recenzie</a></li><li class="sp-menu-item"><a  href="/smartit/index.php/sk/cennik"  >Cenník</a></li><li class="sp-menu-item"><a  href="/smartit/index.php/sk/kontakt"  >Kontakt</a></li></ul>			</div>
-		</div></div></div></div></header><section id="sp-page-title"><div class="row"><div id="sp-title" class="col-sm-12 col-md-12"><div class="sp-column "><div class="sp-page-title"style="background-image: url(/smartit/images/header_background/newspage.jpg);"><div class="container"><h2>Novinky</h2><h3>Najnovšie správy zo sveta IT a technológií.</h3></div></div></div></div></div></section><section id="sp-slider"><div class="row"><div id="sp-slider" class="col-sm-12 col-md-12"><div class="sp-column "><div class="sp-module "><div class="sp-module-content">
+				<ul class="sp-megamenu-parent menu-fade hidden-sm hidden-xs"><li class="sp-menu-item"><a  href="/index.php/sk/"  >Domov</a></li><li class="sp-menu-item"><a  href="/index.php/sk/o-nas"  >O nás</a></li><li class="sp-menu-item current-item active"><a  href="/index.php/sk/novinky"  >Novinky</a></li><li class="sp-menu-item"><a  href="/index.php/sk/recenzie"  >Recenzie</a></li><li class="sp-menu-item"><a  href="/index.php/sk/cennik"  >Cenník</a></li><li class="sp-menu-item"><a  href="/index.php/sk/kontakt"  >Kontakt</a></li></ul>			</div>
+		</div></div></div></div></header><section id="sp-page-title"><div class="row"><div id="sp-title" class="col-sm-12 col-md-12"><div class="sp-column "><div class="sp-page-title"style="background-image: url(/images/header_background/newspage.jpg);"><div class="container"><h2>Novinky</h2><h3>Najnovšie správy zo sveta IT a technológií.</h3></div></div></div></div></div></section><section id="sp-slider"><div class="row"><div id="sp-slider" class="col-sm-12 col-md-12"><div class="sp-column "><div class="sp-module "><div class="sp-module-content">
 <ol class="breadcrumb">
-	<li><i class="fa fa-home"></i></li><li><a href="/smartit/index.php/sk/" class="pathway">Hlavná stránka</a></li><li><a href="/smartit/index.php/sk/novinky" class="pathway">Novinky</a></li><li class="active">Viete ako funguje face recognition technológia?</li></ol>
+	<li><i class="fa fa-home"></i></li><li><a href="/index.php/sk/" class="pathway">Hlavná stránka</a></li><li><a href="/index.php/sk/novinky" class="pathway">Novinky</a></li><li class="active">Viete ako funguje face recognition technológia?</li></ol>
 </div></div></div></div></div></section><section id="sp-main-body"><div class="container"><div class="row"><div id="sp-component" class="col-sm-9 col-md-9"><div class="sp-column "><div id="system-message-container">
 	</div>
 
@@ -124,8 +124,8 @@ var sp_offanimation = 'default';
 				<!-- Item Image -->
 		<div class="itemImageBlock">
 			<span class="itemImage">
-				<a data-k2-modal="image" href="/smartit/media/k2/items/cache/90701d02ae3da0e5a21abbd900c25748_XL.jpg" title="Click to preview image">
-					<img src="/smartit/media/k2/items/cache/90701d02ae3da0e5a21abbd900c25748_XL.jpg" alt="Viete ako funguje face recognition technol&oacute;gia?" style="width:1200px; height:auto;" />
+				<a data-k2-modal="image" href="/media/k2/items/cache/90701d02ae3da0e5a21abbd900c25748_XL.jpg" title="Click to preview image">
+					<img src="/media/k2/items/cache/90701d02ae3da0e5a21abbd900c25748_XL.jpg" alt="Viete ako funguje face recognition technol&oacute;gia?" style="width:1200px; height:auto;" />
 				</a>
 			</span>
 
@@ -151,7 +151,7 @@ var sp_offanimation = 'default';
 				<!-- Item category -->
 		<div class="itemCategory">
 			<span><i class="fa fa-folder-o" aria-hidden="true"></i></span>
-			<a href="/smartit/index.php/sk/novinky">IT bezpečnosť</a>
+			<a href="/index.php/sk/novinky">IT bezpečnosť</a>
 		</div>
 			
 	
@@ -198,7 +198,7 @@ var sp_offanimation = 'default';
 		<div class="itemTagsBlock">
 			<span>Tag</span>
 			<ul class="itemTags">
-								<li><a href="/smartit/index.php/sk/novinky/itemlist/tag/bezpecnost">bezpecnost</a></li>
+								<li><a href="/index.php/sk/novinky/itemlist/tag/bezpecnost">bezpecnost</a></li>
 							</ul>
 			<div class="clr"></div>
 		</div>
@@ -231,7 +231,7 @@ var sp_offanimation = 'default';
 
 <!-- JoomlaWorks "K2" (v2.8.0) | Learn more about K2 at http://getk2.org -->
 
-</div></div><div id="sp-sidebar-2" class="col-sm-3 col-md-3"><div class="sp-column class2"><div class="sp-module "><h3 class="sp-module-title">Autentifikácia</h3><div class="sp-module-content"><form action="http://localhost/smartit/index.php/sk/novinky/item/53-ako-funguje-face-recognition" method="post" id="login-form">
+</div></div><div id="sp-sidebar-2" class="col-sm-3 col-md-3"><div class="sp-column class2"><div class="sp-module "><h3 class="sp-module-title">Autentifikácia</h3><div class="sp-module-content"><form action="http://app-smartit.8u.cz/index.php/sk/novinky/item/53-ako-funguje-face-recognition" method="post" id="login-form">
 		
 	<div id="form-login-username" class="form-group">
 					<div class="input-group">
@@ -264,11 +264,11 @@ var sp_offanimation = 'default';
 
 	<ul class="form-links">
 		<li>
-			<a href="/smartit/index.php/sk/component/users/?view=remind">
+			<a href="/index.php/sk/component/users/?view=remind">
 			Nepamätáte si používateľské meno?</a>
 		</li>
 		<li>
-			<a href="/smartit/index.php/sk/component/users/?view=reset">
+			<a href="/index.php/sk/component/users/?view=reset">
 			Zabudli ste heslo?</a>
 		</li>
 	</ul>
@@ -276,10 +276,10 @@ var sp_offanimation = 'default';
 	<input type="hidden" name="option" value="com_users" />
 	<input type="hidden" name="task" value="user.login" />
 	<input type="hidden" name="return" value="aW5kZXgucGhwP0l0ZW1pZD0zNTEmbGFuZz1zay1TSw==" />
-	<input type="hidden" name="9fface736c31f149ab20ba8e0a482b21" value="1" />
+	<input type="hidden" name="366d73dfb94a56447637b66447272657" value="1" />
 	</form>
 </div></div><div class="sp-module "><h3 class="sp-module-title">Hladať</h3><div class="sp-module-content"><div class="search">
-	<form action="/smartit/index.php/sk/novinky" method="post">
+	<form action="/index.php/sk/novinky" method="post">
 		<input name="searchword" id="mod-search-searchword" maxlength="200"  class="inputbox search-query" type="text" size="0" placeholder="Hľadať ..." />		<input type="hidden" name="task" value="search" />
 		<input type="hidden" name="option" value="com_search" />
 		<input type="hidden" name="Itemid" value="351" />
@@ -289,10 +289,10 @@ var sp_offanimation = 'default';
 
 	<div class="banneritem">
 																																																																			<a
-							href="/smartit/index.php/sk/component/banners/click/4" target="_blank" rel="noopener noreferrer"
+							href="/index.php/sk/component/banners/click/4" target="_blank" rel="noopener noreferrer"
 							title="Zľavy dnes">
 							<img
-								src="http://localhost/smartit/images/logo/ad-1.jpg"
+								src="http://app-smartit.8u.cz/images/logo/ad-1.jpg"
 								alt="Zľavy dnes"
 								 width="300"								 height="300"							/>
 						</a>
@@ -303,7 +303,7 @@ var sp_offanimation = 'default';
 </div></div></div></div></div></div></section><footer id="sp-footer"><div class="container"><div class="row"><div id="sp-footer-1" class="col-sm-3 col-md-3"><div class="sp-column "><div class="sp-module "><div class="sp-module-content">
 
 <div class="custom"  >
-	<div class="custom"><img alt="Footer logo" src="/smartit/images/logo/footer_logo.png" /><br />
+	<div class="custom"><img alt="Footer logo" src="/images/logo/footer_logo.png" /><br />
 <div id="address">
 <div class="address-info">
 <div class="icon"><i class="fa fa-home" aria-hidden="true"></i></div>
@@ -319,7 +319,7 @@ var sp_offanimation = 'default';
 </div>
 <div class="address-info">
 <div class="icon"><i class="fa fa-globe" aria-hidden="true"></i></div>
-<div class="content"><a href="/smartit/www.smartit.sk">www.smartit.sk</a></div>
+<div class="content"><a href="/www.smartit.sk">www.smartit.sk</a></div>
 </div>
 </div>
 <div class="social-icons">
@@ -331,7 +331,7 @@ var sp_offanimation = 'default';
 </div>
 </div></div>
 </div></div></div></div><div id="sp-footer-2" class="col-sm-3 col-md-3"><div class="sp-column "><div class="sp-module "><h3 class="sp-module-title">Zistite viac</h3><div class="sp-module-content"><ul class="nav menu">
-<li class="item-345"><a href="/smartit/index.php/sk/smart-it" > SmartIT s.r.o.</a></li><li class="item-346"><a href="/smartit/index.php/sk/kto-sme" > Kto sme</a></li><li class="item-347"><a href="/smartit/index.php/sk/co-si-myslia-ludia-o-nas" > Čo si myslia klienti o nás</a></li></ul>
+<li class="item-345"><a href="/index.php/sk/smart-it" > SmartIT s.r.o.</a></li><li class="item-346"><a href="/index.php/sk/kto-sme" > Kto sme</a></li><li class="item-347"><a href="/index.php/sk/co-si-myslia-ludia-o-nas" > Čo si myslia klienti o nás</a></li></ul>
 </div></div></div></div><div id="sp-footer-3" class="col-sm-3 col-md-3"><div class="sp-column "><div class="sp-module "><h3 class="sp-module-title">Najdôležitejšie novinky</h3><div class="sp-module-content">
 <div id="k2ModuleBox170" class="k2ItemsBlock">
 
@@ -354,7 +354,7 @@ var sp_offanimation = 'default';
       <!-- K2 Plugins: K2BeforeDisplayContent -->
       
       	  
-			<a class="moduleItemTitle" href="/smartit/index.php/sk/novinky/item/44-co-je-openstack">Čo je OpenStack, kedy ho nasadiť a kedy sa nehodí?</a>
+			<a class="moduleItemTitle" href="/index.php/sk/novinky/item/44-co-je-openstack">Čo je OpenStack, kedy ho nasadiť a kedy sa nehodí?</a>
 	
       
       <div class="clr"></div>
@@ -397,7 +397,7 @@ var sp_offanimation = 'default';
       <!-- K2 Plugins: K2BeforeDisplayContent -->
       
       	  
-			<a class="moduleItemTitle" href="/smartit/index.php/sk/novinky/item/43-co-je-aplikacny-kontajner">Čo je aplikačný kontajner?</a>
+			<a class="moduleItemTitle" href="/index.php/sk/novinky/item/43-co-je-aplikacny-kontajner">Čo je aplikačný kontajner?</a>
 	
       
       <div class="clr"></div>
@@ -471,7 +471,7 @@ var sp_offanimation = 'default';
             <a href="#" class="close-offcanvas" aria-label="Close"><i class="fa fa-remove" aria-hidden="true" title="Close Menu"></i></a>
             <div class="offcanvas-inner">
                                   <div class="sp-module "><h3 class="sp-module-title">SmartIT s.r.o.</h3><div class="sp-module-content"><ul class="nav menu">
-<li class="item-356"><a href="/smartit/index.php/sk/" > Domov</a></li><li class="item-350"><a href="/smartit/index.php/sk/o-nas" > O nás</a></li><li class="item-351  current active"><a href="/smartit/index.php/sk/novinky" > Novinky</a></li><li class="item-352"><a href="/smartit/index.php/sk/recenzie" > Recenzie</a></li><li class="item-353"><a href="/smartit/index.php/sk/cennik" > Cenník</a></li><li class="item-354"><a href="/smartit/index.php/sk/kontakt" > Kontakt</a></li></ul>
+<li class="item-356"><a href="/index.php/sk/" > Domov</a></li><li class="item-350"><a href="/index.php/sk/o-nas" > O nás</a></li><li class="item-351  current active"><a href="/index.php/sk/novinky" > Novinky</a></li><li class="item-352"><a href="/index.php/sk/recenzie" > Recenzie</a></li><li class="item-353"><a href="/index.php/sk/cennik" > Cenník</a></li><li class="item-354"><a href="/index.php/sk/kontakt" > Kontakt</a></li></ul>
 </div></div>
                             </div> <!-- /.offcanvas-inner -->
         </div> <!-- /.offcanvas-menu -->
@@ -486,4 +486,4 @@ var sp_offanimation = 'default';
                     <a href="javascript:void(0)" class="scrollup" aria-label="Go To Top">&nbsp;</a>
         
     </body>
-</html>";s:13:"mime_encoding";s:9:"text/html";s:7:"headers";a:7:{i:0;a:2:{s:4:"name";s:11:"X-Logged-In";s:5:"value";s:5:"False";}i:1;a:2:{s:4:"name";s:20:"X-Content-Powered-By";s:5:"value";s:26:"K2 v2.8.0 (by JoomlaWorks)";}i:2;a:2:{s:4:"name";s:12:"Content-Type";s:5:"value";s:24:"text/html; charset=utf-8";}i:3;a:2:{s:4:"name";s:7:"Expires";s:5:"value";s:29:"Wed, 17 Aug 2005 00:00:00 GMT";}i:4;a:2:{s:4:"name";s:13:"Last-Modified";s:5:"value";s:29:"Wed, 05 Dec 2018 19:57:30 GMT";}i:5;a:2:{s:4:"name";s:13:"Cache-Control";s:5:"value";s:62:"no-store, no-cache, must-revalidate, post-check=0, pre-check=0";}i:6;a:2:{s:4:"name";s:6:"Pragma";s:5:"value";s:8:"no-cache";}}}
+</html>";s:13:"mime_encoding";s:9:"text/html";s:7:"headers";a:7:{i:0;a:2:{s:4:"name";s:11:"X-Logged-In";s:5:"value";s:5:"False";}i:1;a:2:{s:4:"name";s:20:"X-Content-Powered-By";s:5:"value";s:26:"K2 v2.8.0 (by JoomlaWorks)";}i:2;a:2:{s:4:"name";s:12:"Content-Type";s:5:"value";s:24:"text/html; charset=utf-8";}i:3;a:2:{s:4:"name";s:7:"Expires";s:5:"value";s:29:"Wed, 17 Aug 2005 00:00:00 GMT";}i:4;a:2:{s:4:"name";s:13:"Last-Modified";s:5:"value";s:29:"Thu, 06 Dec 2018 18:45:23 GMT";}i:5;a:2:{s:4:"name";s:13:"Cache-Control";s:5:"value";s:62:"no-store, no-cache, must-revalidate, post-check=0, pre-check=0";}i:6;a:2:{s:4:"name";s:6:"Pragma";s:5:"value";s:8:"no-cache";}}}

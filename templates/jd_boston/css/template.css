@@ -3919,7 +3919,6 @@ section#sp-main-body {
   border-bottom: 1px solid #ddd;
 }
 .ot_testimonial .ot_list .ot_info {
-  float: left;
   width: 220px;
   text-align: center;
 }
@@ -3927,8 +3926,7 @@ section#sp-main-body {
   display: block;
 }
 .ot_testimonial .ot_list .ot_tcontent {
-  float: left;
-  width: 80%;
+  text-align: center;
 }
 .ot_testimonial .ot_list .ot_tcontent .ot_title {
   width: 100%;
@@ -6634,4 +6632,29 @@ p.dropcap:first-letter {
 }
 #sp-googlemap {
     background-color: #262626;
+}
+#sp-title > .sp-age-title, .sp-age-title {
+    background-position: center center;
+}
+p {
+    margin: 0 0 0px;
+}
+.eq{
+	display:none;
+}
+@media (max-width: 768px) {
+  .sp-module .sp-module-title {
+    font-size: 32px;
+  }
+  .sp-simpleportfolio-filter, #sp-bottom, #sp-showcase{
+    display: none;
+  }
+  .col-md-4.modern {
+    float: left;
+  }
+}
+@media (max-width: 990px) {
+  .col-md-4.modern {
+    float: left;
+  }
 }

@@ -357,7 +357,9 @@
  * # Semantic UI 2.3.1 - Transition
  * http://github.com/semantic-org/semantic-ui/
  *
- *
+ */
+@media (max-width: 768px) {#meno, #email, #sprava, #predmet, #button12 {width: 70vw;}}
+ /*
  * Released under the MIT license
  * http://opensource.org/licenses/MIT
  *
