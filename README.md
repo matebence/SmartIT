@@ -1,11 +1,10 @@
-# Aplikácia SmartIT
+# SmartIT
 
-Aplikácia je dostupná na adrese:<br />
+The application is available at:<br />
 http://app-smartit.8u.cz/<br />
 
 
-
-# Štruktúra aplikácie
+# Application structure
 
 __includes<br />
 __language<br />
@@ -30,7 +29,7 @@ robots.txt.dist<br />
 SmartIT.md<br />
 web.config.txt<br />
 
-## Použité technológie
+## Technologies
 
 Joomla<br />
 Bootstrap<br />
