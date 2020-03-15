@@ -1,9 +1,4 @@
 # SmartIT
-
-The application is available at:<br />
-http://app-smartit.8u.cz/<br />
-
-
 # Application structure
 
 __includes<br />
